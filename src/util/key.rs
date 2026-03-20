@@ -63,3 +63,17 @@ impl SK {
         Ok(PK::new(key))
     }
 }
+
+pub fn generate_pk_and_sk(bits: u32) -> Result<(PK, SK), ()> {
+    let Ok(rsa) = Rsa::generate(bits) else {
+        return Err(());
+    };
+    let Ok(key) = PKey::from_rsa(rsa) else {
+        return Err(());
+    };
+    let sk = SK::new(key);
+    let Ok(pk) = sk.to_pk() else {
+        return Err(());
+    };
+    Ok((pk, sk))
+}
