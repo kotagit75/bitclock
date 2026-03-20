@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+axum = "0.8.8"
 hex = "0.4.3"
 openssl = "0.10.76"
 serde = { version = "1.0.228", features = ["derive"]}
