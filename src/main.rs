@@ -43,6 +43,7 @@ async fn main() {
         let Some(event) = rx.recv().await else {
             continue;
         };
+        debug!("Got an event: {:?}", event);
         let (new_state, effect) = update(state.clone(), event);
         state = new_state;
         tokio::spawn(async move { run_effect(effect).await });
