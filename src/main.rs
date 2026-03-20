@@ -1,7 +1,11 @@
+#[macro_use]
+extern crate log;
+extern crate simple_logger as logger;
+
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
 use crate::{
-    core::proof::PROOF_KEY_BITS,
+    adapter::init_adapter,
     effect::run::run_effect,
     model::{event::Event, proof::ProofPool, state::State},
     update::update,
@@ -19,7 +23,10 @@ const NODE_KEY_BITS: u32 = 512;
 
 #[tokio::main]
 async fn main() {
+    simple_logger::init_with_level(log::Level::Debug).unwrap();
+
     let Ok((address, node_sk)) = generate_pk_and_sk(NODE_KEY_BITS) else {
+        error!("Failed to generate the node's private key.");
         return;
     };
     let mut state = State {
@@ -30,6 +37,7 @@ async fn main() {
     };
 
     let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
+    init_adapter(tx);
 
     loop {
         let Some(event) = rx.recv().await else {
