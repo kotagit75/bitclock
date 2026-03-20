@@ -1,3 +1,4 @@
+pub mod address;
 pub mod effect;
 pub mod event;
 pub mod proof;
