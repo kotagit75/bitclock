@@ -1,0 +1,16 @@
+use serde::{Deserialize, Serialize};
+
+use crate::{
+    model::{address::Address, signature::Signature},
+    util::key::PK,
+};
+
+#[derive(Clone, Debug, Serialize, Deserialize, Hash)]
+pub struct Stamp {
+    pub address: Address,
+    pub count: u32,
+    pub pk: PK,
+    pub nonce: u32,
+    pub id: usize,
+    pub sign: Signature,
+}
