@@ -34,7 +34,7 @@ async fn main() {
     let mut state = State {
         proof_pool: ProofPool::new(),
         stamp_pool: HashMap::new(),
-        un_signed_proof: HashMap::new(),
+        un_signed_proof_pool: HashMap::new(),
         count: 0,
         node_sk,
         address,
