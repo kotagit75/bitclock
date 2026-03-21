@@ -32,7 +32,6 @@ pub async fn run_effect(state: State, effect: Effect) {
                 ),
             )
             .await;
-            // create_stamp and broadcast
         }
         Effect::Broadcast(message) => {
             broadcast(state.peers, message).await;
