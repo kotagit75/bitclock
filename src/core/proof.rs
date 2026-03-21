@@ -311,7 +311,7 @@ impl ProofPool {
         }
         (false, self.clone(), count)
     }
-    pub fn update_proof_pool(
+    pub fn update(
         &self,
         address: Address,
         current_count: u32,
