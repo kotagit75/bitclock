@@ -1,5 +1,5 @@
 use crate::{
-    model::{address::Address, proof::ProofPool},
+    model::{address::Address, client::Client, proof::ProofPool},
     util::key::SK,
 };
 
@@ -9,4 +9,5 @@ pub struct State {
     pub count: u32,
     pub node_sk: SK,
     pub address: Address,
+    pub peers: Vec<Client>,
 }
