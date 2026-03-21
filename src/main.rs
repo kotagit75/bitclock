@@ -49,7 +49,8 @@ async fn main() {
             continue;
         };
         debug!("Got an event: {:?}", event);
-        let (new_state, effect) = update(state.clone(), event);
+        let time = chrono::prelude::Utc::now().timestamp_millis();
+        let (new_state, effect) = update(state.clone(), event, time);
         state = new_state;
         let state_clone = state.clone();
         tokio::spawn(async move { run_effect(state_clone, effect).await });
