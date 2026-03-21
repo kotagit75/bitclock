@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 axum = "0.8.8"
+chrono = "0.4.44"
 hex = "0.4.3"
 log = "0.4.29"
 openssl = "0.10.76"
