@@ -47,6 +47,7 @@ async fn main() {
         debug!("Got an event: {:?}", event);
         let (new_state, effect) = update(state.clone(), event);
         state = new_state;
-        tokio::spawn(async move { run_effect(effect).await });
+        let state_clone = state.clone();
+        tokio::spawn(async move { run_effect(state_clone, effect).await });
     }
 }
