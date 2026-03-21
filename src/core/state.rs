@@ -1,8 +1,13 @@
-use crate::model::{
-    client::Client,
-    proof::{ProofPool, UnSignedProof},
-    stamp::Stamp,
-    state::State,
+use std::collections::{HashMap, HashSet};
+
+use crate::{
+    model::{
+        client::Client,
+        proof::{Proof, ProofPool, UnSignedProof},
+        stamp::Stamp,
+        state::State,
+    },
+    util::key::PK,
 };
 
 impl State {
@@ -61,7 +66,7 @@ impl State {
             peers,
         }
     }
-    pub fn update_pool_and_count(&self, (pool, count): (ProofPool, u32)) -> Self {
+    pub fn update_pool_and_count(&self, (_, pool, count): (bool, ProofPool, u32)) -> Self {
         self.update_proof_pool(pool).update_count(count)
     }
 }
@@ -80,5 +85,30 @@ impl State {
         let mut new_peers = self.peers.clone();
         new_peers.push(Client::new(ip));
         self.update_peers(new_peers)
+    }
+    fn stamp_pool_to_map(&self) -> HashMap<PK, Vec<Stamp>> {
+        let mut stamp_map: HashMap<PK, Vec<Stamp>> = HashMap::new();
+        for stamp in self.stamp_pool.clone() {
+            stamp_map
+                .entry(stamp.pk.clone())
+                .or_insert_with(|| vec![])
+                .push(stamp);
+        }
+        stamp_map
+    }
+    fn un_signed_proof_pool_to_map(&self) -> HashMap<PK, Proof> {
+        let mut proof_map: HashMap<PK, Proof> = HashMap::new();
+        for proof in self.un_signed_proof_pool.clone() {
+            if let Ok(pk_) = proof.get_proof_pk() {
+                proof_map.insert(pk_, proof);
+            }
+        }
+        proof_map
+    }
+    pub fn find_from_stamp_pool(&self, pk: &PK) -> Option<Vec<Stamp>> {
+        self.stamp_pool_to_map().get(pk).cloned()
+    }
+    pub fn find_from_un_stamped_proof_pool(&self, pk: &PK) -> Option<Proof> {
+        self.un_signed_proof_pool_to_map().get(pk).cloned()
     }
 }

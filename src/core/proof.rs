@@ -327,7 +327,12 @@ impl ProofPool {
         }
         (false, self.clone(), count)
     }
-    pub fn update(&self, address: Address, current_count: u32, new_pool: &Self) -> (Self, u32) {
+    pub fn update(
+        &self,
+        address: Address,
+        current_count: u32,
+        new_pool: &Self,
+    ) -> (bool, Self, u32) {
         let mut count = current_count;
         let mut proof_pool = self.clone();
         let mut added = false;
@@ -340,8 +345,8 @@ impl ProofPool {
         }
         let diff: HashSet<Proof> = self.pool.difference(&new_pool.pool).cloned().collect();
         if added || diff.len() > 0 {
-            return (proof_pool, count);
+            return (true, proof_pool, count);
         }
-        (proof_pool, count)
+        (false, proof_pool, count)
     }
 }
