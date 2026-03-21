@@ -10,9 +10,8 @@ use tokio::sync::{
 use crate::{
     adapter::init_adapter,
     effect::run::run_effect,
-    model::{client::Client, event::Event, proof::ProofPool, state::State},
+    model::{event::Event, state::State},
     update::update,
-    util::key::generate_pk_and_sk,
 };
 
 mod adapter;
@@ -22,30 +21,15 @@ mod model;
 mod update;
 mod util;
 
-const NODE_KEY_BITS: u32 = 512;
-
 #[tokio::main]
 async fn main() {
     simple_logger::init_with_level(log::Level::Debug).unwrap();
-
-    let Ok((address, node_sk)) = generate_pk_and_sk(NODE_KEY_BITS) else {
-        error!("Failed to generate the node's private key.");
+    let Ok(mut state) = State::new() else {
         return;
     };
-    let mut state = State {
-        proof_pool: ProofPool::new(),
-        stamp_pool: Vec::new(),
-        un_signed_proof_pool: Vec::new(),
-        count: 0,
-        node_sk,
-        address,
-        peers: vec![Client::new("localhost".to_string())],
-    };
-
     let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
     let (state_tx, state_rx) = watch::channel(state.clone());
     init_adapter(tx, state_rx);
-
     loop {
         debug!("New state: {:?}", state);
         let Some(event) = rx.recv().await else {
