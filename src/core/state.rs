@@ -1,16 +1,32 @@
 use std::collections::HashMap;
 
 use crate::{
+    core::node::NODE_KEY_BITS,
     model::{
         client::Client,
         proof::{Proof, ProofPool, UnSignedProof},
         stamp::Stamp,
         state::State,
     },
-    util::key::PK,
+    util::key::{PK, generate_pk_and_sk},
 };
 
 impl State {
+    pub fn new() -> Result<Self, ()> {
+        let Ok((address, node_sk)) = generate_pk_and_sk(NODE_KEY_BITS) else {
+            error!("Failed to generate the node's private key.");
+            return Err(());
+        };
+        Ok(State {
+            proof_pool: ProofPool::new(),
+            stamp_pool: Vec::new(),
+            un_signed_proof_pool: Vec::new(),
+            count: 0,
+            node_sk,
+            address,
+            peers: vec![Client::new("localhost".to_string())],
+        })
+    }
     pub fn update_proof_pool(&self, pool: ProofPool) -> Self {
         State {
             proof_pool: pool,
