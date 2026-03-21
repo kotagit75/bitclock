@@ -1,4 +1,5 @@
 pub mod address;
+pub mod client;
 pub mod effect;
 pub mod event;
 pub mod proof;
