@@ -13,7 +13,7 @@ impl Client {
     fn get_url(&self) -> String {
         format!("http://{}:{}", self.ip, P2P_PORT)
     }
-    async fn write(&self, message: &P2PMessage) {
+    pub async fn write(&self, message: &P2PMessage) {
         let _ = reqwest::Client::new()
             .post(self.get_url())
             .json(message)
