@@ -1,7 +1,11 @@
+use crate::adapter::api::APIRequest;
 use crate::adapter::p2p::P2PMessage;
+use crate::core::proof::PROOF_KEY_BITS;
+use crate::model::proof::UnSignedProof;
 use crate::model::{effect::Effect, event::Event, state::State};
+use crate::util::key::generate_pk_and_sk;
 
-pub fn update(state: State, event: Event) -> (State, Effect) {
+pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
     match event {
         Event::None => (state, Effect::None),
         Event::P2PRequest(P2PMessage::None) => (state, Effect::None),
@@ -19,6 +23,17 @@ pub fn update(state: State, event: Event) -> (State, Effect) {
             )),
             Effect::None,
         ),
-        Event::APIRequest(apirequest) => todo!(),
+        Event::APIRequest(APIRequest::None) => (state, Effect::None),
+        Event::APIRequest(APIRequest::Proof(data)) => {
+            let Ok((pk, sk)) = generate_pk_and_sk(PROOF_KEY_BITS) else {
+                return (state, Effect::None);
+            };
+            let difficulty = state.proof_pool.calc_difficulty(time);
+            let un_signed_proof = UnSignedProof::new(data, sk, state.address, difficulty, time);
+            (
+                state.add_to_un_signed_proof_pool(un_signed_proof),
+                Effect::Broadcast(P2PMessage::RequestStamp(pk, difficulty)),
+            )
+        }
     }
 }
