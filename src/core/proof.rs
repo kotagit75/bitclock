@@ -73,12 +73,6 @@ impl Proof {
             .find(|stamp| stamp.address == address)
             .cloned()
     }
-
-    pub fn push_stamp(&self, stamp: Stamp) -> Self {
-        let mut proof = self.clone();
-        proof.stamps.push(stamp);
-        proof
-    }
 }
 
 fn proof_to_buf_for_sign(
@@ -142,7 +136,7 @@ pub fn create_sign_to_proof(
 }
 
 pub fn calc_number_of_stamps() -> usize {
-    1000
+    1
 }
 
 pub fn is_valid_proof(proof: Proof) -> bool {
