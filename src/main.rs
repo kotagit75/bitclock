@@ -2,8 +2,6 @@
 extern crate log;
 extern crate simple_logger as logger;
 
-use std::collections::HashMap;
-
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
 use crate::{
@@ -49,8 +47,11 @@ async fn main() {
             continue;
         };
         debug!("Got an event: {:?}", event);
-        let time = chrono::prelude::Utc::now().timestamp_millis();
-        let (new_state, effect) = update(state.clone(), event, time);
+        let (new_state, effect) = update(
+            state.clone(),
+            event,
+            chrono::prelude::Utc::now().timestamp_millis(),
+        );
         state = new_state;
         let state_clone = state.clone();
         tokio::spawn(async move { run_effect(state_clone, effect).await });
