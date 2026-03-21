@@ -19,7 +19,7 @@ pub enum P2PMessage {
     UpdateProofpool(ProofPool),
 }
 
-const P2P_PORT: u32 = 3000;
+pub const P2P_PORT: u32 = 3000;
 pub async fn init_p2p(tx: Sender<Event>) {
     // add_peer("localhost".to_string()).await;
     let app = Router::new()
