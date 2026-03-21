@@ -19,5 +19,6 @@ pub fn update(state: State, event: Event) -> (State, Effect) {
             )),
             Effect::None,
         ),
+        Event::APIRequest(apirequest) => todo!(),
     }
 }
