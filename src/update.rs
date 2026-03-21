@@ -7,7 +7,6 @@ use crate::util::key::generate_pk_and_sk;
 
 pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
     match event {
-        Event::None => (state, Effect::None),
         Event::P2PRequest(P2PMessage::None) => (state, Effect::None),
         Event::P2PRequest(P2PMessage::RequestStamp(pk, difficulty)) => {
             (state, Effect::CreateStamp(pk, difficulty))
