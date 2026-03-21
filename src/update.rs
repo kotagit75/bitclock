@@ -29,11 +29,13 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
                 return (state, Effect::None);
             };
             let difficulty = state.proof_pool.calc_difficulty(time);
-            let un_signed_proof = UnSignedProof::new(data, sk, state.address, difficulty, time);
+            let un_signed_proof =
+                UnSignedProof::new(data, sk, state.address.clone(), difficulty, time);
             (
                 state.add_to_un_signed_proof_pool(un_signed_proof),
                 Effect::Broadcast(P2PMessage::RequestStamp(pk, difficulty)),
             )
         }
+        Event::APIRequest(APIRequest::AddPeer(ip)) => (state.add_peer(ip), Effect::None),
     }
 }
