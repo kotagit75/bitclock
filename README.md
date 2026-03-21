@@ -18,5 +18,39 @@ BitClock is a ledger-free distributed timestamp system. You can issue timestamps
 - ⚡ Fast timestamp creation - Once you've collected a certain number of stamps, you can create a proof right away.
 - 🔒 Instant confirmation - A proof is finalized once it is validated by the network and cannot be reversed.
 
+## :rocket: Getting Started
+### Installation
+```bash
+# Clone the repository (or Download ZIP)
+$ git clone https://github.com/kotagit75/bitclock.git
+
+# Navigate to the project directory
+$ cd bitclock
+```
+
+### Usage
+```bash
+# run
+$ cargo run
+
+# get status
+$ curl http://localhost:8080/status
+
+# get address
+$ curl http://localhost:8080/query/address
+
+# get pool
+$ curl http://localhost:8080/query/pool
+
+# get peers
+$ curl http://localhost:8080/query/peers
+
+# add peer
+$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' http://localhost:8080/
+
+# proof
+$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"Some data"}' http://localhost:8080/
+```
+
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
