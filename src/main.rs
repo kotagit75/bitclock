@@ -2,6 +2,8 @@
 extern crate log;
 extern crate simple_logger as logger;
 
+use std::collections::HashMap;
+
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
 use crate::{
@@ -31,6 +33,8 @@ async fn main() {
     };
     let mut state = State {
         proof_pool: ProofPool::new(),
+        stamp_pool: HashMap::new(),
+        un_signed_proof: HashMap::new(),
         count: 0,
         node_sk,
         address,
