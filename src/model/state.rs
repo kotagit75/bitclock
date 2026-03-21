@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::{
     model::{
         address::Address,
@@ -7,10 +5,10 @@ use crate::{
         proof::{ProofPool, UnSignedProof},
         stamp::Stamp,
     },
-    util::key::{PK, SK},
+    util::key::SK,
 };
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct State {
     pub proof_pool: ProofPool,
     pub stamp_pool: Vec<Stamp>,
