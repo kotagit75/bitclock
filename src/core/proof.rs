@@ -7,7 +7,7 @@ use openssl::sign::{Signer, Verifier};
 use crate::core::stamp::sum_of_count;
 use crate::core::stamp::{is_same_stamps, is_valid_stamp};
 use crate::model::address::Address;
-use crate::model::proof::{Proof, ProofPool, UnStampedProof};
+use crate::model::proof::{Proof, ProofPool, UnSignedProof};
 use crate::model::signature::Signature;
 use crate::model::stamp::Stamp;
 use crate::util::key::{PK, SK};
@@ -192,7 +192,7 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
     sum_of_count(proof1_duplicated_stamps).cmp(&sum_of_count(proof2_duplicated_stamps))
 }
 
-impl UnStampedProof {
+impl UnSignedProof {
     pub fn new(data: String, sk: SK, address: Address, difficulty: usize, time: i64) -> Self {
         Proof {
             data,

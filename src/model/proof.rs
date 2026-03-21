@@ -22,4 +22,4 @@ pub struct Proof {
 pub struct ProofPool {
     pub pool: HashSet<Proof>,
 }
-pub type UnStampedProof = Proof;
+pub type UnSignedProof = Proof;
