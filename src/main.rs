@@ -43,6 +43,7 @@ async fn main() {
     init_adapter(tx);
 
     loop {
+        debug!("New state: {:?}", state);
         let Some(event) = rx.recv().await else {
             continue;
         };
