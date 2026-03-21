@@ -11,6 +11,8 @@ use crate::model::event::Event;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum APIRequest {
     None,
+    AddPeer(String /*ip */),
+    Proof(String /*data */),
 }
 
 pub const API_PORT: u32 = 3000;
