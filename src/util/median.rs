@@ -2,6 +2,9 @@ pub fn median(list: &Vec<i64>) -> Option<i64> {
     let mut list = list.clone();
     let len = list.len();
     list.sort_unstable();
+    if len == 0 {
+        return None;
+    }
     if len % 2 == 0 {
         let (a, b) = {
             let mid = len / 2;
