@@ -9,6 +9,13 @@ pub fn update(state: State, event: Event) -> (State, Effect) {
             (state, Effect::CreateStamp(pk, difficulty))
         }
         Event::P2PRequest(P2PMessage::ResponceStamp(pk, stamp)) => (state, Effect::None),
-        Event::P2PRequest(P2PMessage::UpdateProofpool(new_pool)) => (state, Effect::None),
+        Event::P2PRequest(P2PMessage::UpdateProofpool(new_pool)) => (
+            state.update_pool_and_count(state.proof_pool.update(
+                state.address.clone(),
+                state.count,
+                &new_pool,
+            )),
+            Effect::None,
+        ),
     }
 }
