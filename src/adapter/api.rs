@@ -31,6 +31,6 @@ async fn handle_request(
     State(tx): State<Sender<Event>>,
     extract::Json(message): extract::Json<APIRequest>,
 ) -> &'static str {
-    let _ = tx.send(Event::APIRequest(message));
+    let _ = tx.send(Event::APIRequest(message)).await;
     ""
 }

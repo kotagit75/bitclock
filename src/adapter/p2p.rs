@@ -35,6 +35,6 @@ async fn handle_message(
     State(tx): State<Sender<Event>>,
     extract::Json(message): extract::Json<P2PMessage>,
 ) -> &'static str {
-    let _ = tx.send(Event::P2PRequest(message));
+    let _ = tx.send(Event::P2PRequest(message)).await;
     ""
 }
