@@ -2,7 +2,10 @@
 extern crate log;
 extern crate simple_logger as logger;
 
-use tokio::sync::mpsc::{self, Receiver, Sender};
+use tokio::sync::{
+    mpsc::{self, Receiver, Sender},
+    watch,
+};
 
 use crate::{
     adapter::init_adapter,
@@ -40,7 +43,8 @@ async fn main() {
     };
 
     let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
-    init_adapter(tx);
+    let (state_tx, state_rx) = watch::channel(state.clone());
+    init_adapter(tx, state_rx);
 
     loop {
         debug!("New state: {:?}", state);
@@ -54,6 +58,7 @@ async fn main() {
             chrono::prelude::Utc::now().timestamp_millis(),
         );
         state = new_state;
+        let _ = state_tx.send(state.clone());
         let state_clone = state.clone();
         tokio::spawn(async move { run_effect(state_clone, effect).await });
     }
