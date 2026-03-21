@@ -1,5 +1,6 @@
 use crate::{
     model::{
+        client::Client,
         proof::{ProofPool, UnSignedProof},
         stamp::Stamp,
         state::State,
@@ -49,6 +50,19 @@ impl State {
             node_sk: self.node_sk.clone(),
             address: self.address.clone(),
             peers: self.peers.clone(),
+        }
+    }
+    pub fn add_peer(&self, ip: String) -> Self {
+        let mut new_peers = self.peers.clone();
+        new_peers.push(Client::new(ip));
+        State {
+            proof_pool: self.proof_pool.clone(),
+            stamp_pool: self.stamp_pool.clone(),
+            un_signed_proof_pool: self.un_signed_proof_pool.clone(),
+            count: self.count,
+            node_sk: self.node_sk.clone(),
+            address: self.address.clone(),
+            peers: new_peers,
         }
     }
 }
