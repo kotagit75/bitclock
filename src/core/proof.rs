@@ -10,7 +10,7 @@ use crate::model::address::Address;
 use crate::model::proof::{Proof, ProofPool, UnSignedProof};
 use crate::model::signature::Signature;
 use crate::model::stamp::Stamp;
-use crate::util::key::{PK, SK};
+use crate::util::key::{PK, SK, generate_pk_and_sk};
 use crate::util::median::median;
 
 pub const PROOF_KEY_BITS: u32 = 512;
@@ -203,6 +203,21 @@ impl UnSignedProof {
             time,
             sign: Vec::new(),
         }
+    }
+    pub fn create(
+        data: String,
+        address: Address,
+        time: i64,
+        proof_pool: &ProofPool,
+    ) -> Result<(Self, PK), ()> {
+        let Ok((pk, sk)) = generate_pk_and_sk(PROOF_KEY_BITS) else {
+            return Err(());
+        };
+        let difficulty = proof_pool.calc_difficulty(time);
+        Ok((
+            UnSignedProof::new(data, sk, address.clone(), difficulty, time),
+            pk,
+        ))
     }
 
     pub fn create_signed_proof(&self, node_sk: SK, stamps: Vec<Stamp>) -> Result<Proof, ()> {
