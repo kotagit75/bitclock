@@ -1,4 +1,7 @@
-use crate::model::{effect::Effect, state::State};
+use crate::{
+    adapter::p2p::P2PMessage,
+    model::{client::Client, effect::Effect, state::State},
+};
 
 pub async fn run_effect(state: State, effect: Effect) {
     match effect {
@@ -6,6 +9,14 @@ pub async fn run_effect(state: State, effect: Effect) {
         Effect::CreateStamp(pk, difficulty) => {
             // create_stamp and broadcast
         }
-        Effect::Broadcast(message) => {}
+        Effect::Broadcast(message) => {
+            broadcast(state.peers, message).await;
+        }
+    }
+}
+
+async fn broadcast(peers: Vec<Client>, message: P2PMessage) {
+    for peer in peers {
+        peer.write(&message).await;
     }
 }
