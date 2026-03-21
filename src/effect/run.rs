@@ -17,21 +17,15 @@ pub async fn run_effect(state: State, effect: Effect) {
             else {
                 return;
             };
-            broadcast(
-                state.peers,
-                P2PMessage::ResponceStamp(
-                    pk.clone(),
-                    Stamp {
-                        address,
-                        count,
-                        pk,
-                        nonce,
-                        id,
-                        sign,
-                    },
-                ),
-            )
-            .await;
+            let stamp = Stamp {
+                address,
+                count,
+                pk: pk.clone(),
+                nonce,
+                id,
+                sign,
+            };
+            broadcast(state.peers, P2PMessage::ResponceStamp(pk, stamp)).await;
         }
         Effect::Broadcast(message) => {
             broadcast(state.peers, message).await;
