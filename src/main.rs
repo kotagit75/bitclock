@@ -7,7 +7,7 @@ use tokio::sync::mpsc::{self, Receiver, Sender};
 use crate::{
     adapter::init_adapter,
     effect::run::run_effect,
-    model::{event::Event, proof::ProofPool, state::State},
+    model::{client::Client, event::Event, proof::ProofPool, state::State},
     update::update,
     util::key::generate_pk_and_sk,
 };
@@ -34,6 +34,7 @@ async fn main() {
         count: 0,
         node_sk,
         address,
+        peers: vec![Client::new("localhost".to_string())],
     };
 
     let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
