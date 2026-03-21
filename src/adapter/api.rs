@@ -15,7 +15,7 @@ pub enum APIRequest {
     Proof(String /*data */),
 }
 
-pub const API_PORT: u32 = 3000;
+pub const API_PORT: u32 = 8080;
 pub async fn init_api(tx: Sender<Event>) {
     let app = Router::new()
         .route("/", post(handle_request))
