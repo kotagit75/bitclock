@@ -1,22 +1,18 @@
 use std::collections::HashMap;
 
 use crate::{
-    core::node::NODE_KEY_BITS,
     model::{
+        address::Address,
         client::Client,
         proof::{Proof, ProofPool, UnSignedProof},
         stamp::Stamp,
         state::State,
     },
-    util::key::{PK, generate_pk_and_sk},
+    util::key::{PK, SK},
 };
 
 impl State {
-    pub fn new() -> Result<Self, ()> {
-        let Ok((address, node_sk)) = generate_pk_and_sk(NODE_KEY_BITS) else {
-            error!("Failed to generate the node's private key.");
-            return Err(());
-        };
+    pub fn new((address, node_sk): (Address, SK)) -> Result<Self, ()> {
         Ok(State {
             proof_pool: ProofPool::new(),
             stamp_pool: Vec::new(),

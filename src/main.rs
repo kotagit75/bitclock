@@ -9,6 +9,7 @@ use tokio::sync::{
 
 use crate::{
     adapter::init_adapter,
+    core::node::load_key,
     effect::run::run_effect,
     model::{event::Event, state::State},
     update::update,
@@ -24,7 +25,12 @@ mod util;
 #[tokio::main]
 async fn main() {
     simple_logger::init_with_level(log::Level::Debug).unwrap();
-    let Ok(mut state) = State::new() else {
+
+    let Ok(key_pair) = load_key().await else {
+        error!("Failed to load the private key");
+        return;
+    };
+    let Ok(mut state) = State::new(key_pair) else {
         return;
     };
     let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
