@@ -20,16 +20,9 @@ impl State {
             peers: self.peers.clone(),
         }
     }
-    pub fn add_to_stamp_pool(&self, pk: PK, stamp: Stamp) -> Self {
-        if self.un_signed_proof_pool.get(&pk).is_none() {
-            return self.clone();
-        }
+    pub fn add_to_stamp_pool(&self, stamp: Stamp) -> Self {
         let mut new_stamp_pool = self.stamp_pool.clone();
-        if let Some(stamps) = new_stamp_pool.get(&pk) {
-            let mut new_stamps = stamps.clone();
-            new_stamps.push(stamp);
-            new_stamp_pool.insert(pk, new_stamps);
-        }
+        new_stamp_pool.push(stamp);
         State {
             proof_pool: self.proof_pool.clone(),
             stamp_pool: new_stamp_pool,
@@ -42,10 +35,7 @@ impl State {
     }
     pub fn add_to_un_signed_proof_pool(&self, un_signed_proof: UnSignedProof) -> Self {
         let mut new_un_signed_proof_pool = self.un_signed_proof_pool.clone();
-        let Ok(pk) = un_signed_proof.get_proof_pk() else {
-            return self.clone();
-        };
-        new_un_signed_proof_pool.insert(pk, un_signed_proof);
+        new_un_signed_proof_pool.push(un_signed_proof);
         State {
             proof_pool: self.proof_pool.clone(),
             stamp_pool: self.stamp_pool.clone(),
