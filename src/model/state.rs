@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use crate::{
     model::{
         address::Address,
@@ -8,7 +10,7 @@ use crate::{
     util::key::SK,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct State {
     pub proof_pool: ProofPool,
     pub stamp_pool: Vec<Stamp>,
