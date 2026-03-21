@@ -16,6 +16,9 @@ impl State {
         }
     }
     pub fn add_to_stamp_pool(&self, pk: PK, stamp: Stamp) -> Self {
+        if self.un_signed_proof.get(&pk).is_none() {
+            return self.clone();
+        }
         let mut new_stamp_pool = self.stamp_pool.clone();
         new_stamp_pool.insert(pk, stamp);
         State {
