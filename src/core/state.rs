@@ -25,7 +25,11 @@ impl State {
             return self.clone();
         }
         let mut new_stamp_pool = self.stamp_pool.clone();
-        new_stamp_pool.insert(pk, stamp);
+        if let Some(stamps) = new_stamp_pool.get(&pk) {
+            let mut new_stamps = stamps.clone();
+            new_stamps.push(stamp);
+            new_stamp_pool.insert(pk, new_stamps);
+        }
         State {
             proof_pool: self.proof_pool.clone(),
             stamp_pool: new_stamp_pool,

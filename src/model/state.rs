@@ -13,7 +13,7 @@ use crate::{
 #[derive(Clone)]
 pub struct State {
     pub proof_pool: ProofPool,
-    pub stamp_pool: HashMap<PK, Stamp>,
+    pub stamp_pool: HashMap<PK, Vec<Stamp>>,
     pub un_signed_proof_pool: HashMap<PK, UnSignedProof>,
     pub count: u32,
     pub node_sk: SK,
