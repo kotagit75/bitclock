@@ -52,5 +52,8 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' htt
 $ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"Some data"}' http://localhost:8080/
 ```
 
+> [!CAUTION]
+> Never make the `node` directory or any files within it publicly accessible. Doing so could result in the leakage of your private key.
+
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
