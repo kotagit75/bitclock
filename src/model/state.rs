@@ -14,7 +14,7 @@ use crate::{
 pub struct State {
     pub proof_pool: ProofPool,
     pub stamp_pool: HashMap<PK, Stamp>,
-    pub un_signed_proof: HashMap<PK, UnSignedProof>,
+    pub un_signed_proof_pool: HashMap<PK, UnSignedProof>,
     pub count: u32,
     pub node_sk: SK,
     pub address: Address,
