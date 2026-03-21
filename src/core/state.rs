@@ -35,7 +35,7 @@ impl State {
             peers: self.peers.clone(),
         }
     }
-    pub fn add_tp_un_signed_proof_pool(&self, un_signed_proof: UnSignedProof) -> Self {
+    pub fn add_to_un_signed_proof_pool(&self, un_signed_proof: UnSignedProof) -> Self {
         let mut new_un_signed_proof_pool = self.un_signed_proof_pool.clone();
         let Ok(pk) = un_signed_proof.get_proof_pk() else {
             return self.clone();
