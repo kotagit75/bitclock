@@ -11,7 +11,6 @@ use crate::model::{address::Address, event::Event, proof::ProofPool};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum APIRequest {
-    None,
     AddPeer(String /*ip */),
     Proof(String /*data */),
 }

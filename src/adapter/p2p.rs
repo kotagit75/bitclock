@@ -13,7 +13,6 @@ use crate::{
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum P2PMessage {
-    None,
     RequestStamp(PK, usize /*difficulty */),
     ResponceStamp(PK, Stamp),
     UpdateProofpool(ProofPool),
