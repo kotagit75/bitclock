@@ -21,15 +21,14 @@ impl Stamp {
     }
 
     pub fn verify_sign(&self) -> bool {
-        let Ok(buf) = self.to_buf_for_sign() else {
-            return false;
-        };
-
         let key = self.address.key();
         let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
             return false;
         };
-        let Ok(_) = verifyer.update(&buf) else {
+        let Ok(_) = self
+            .to_buf_for_sign()
+            .and_then(|buf| Ok(verifyer.update(&buf)))
+        else {
             return false;
         };
         let Ok(result) = verifyer.verify(&self.sign) else {
