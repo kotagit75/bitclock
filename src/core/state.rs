@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::{
     model::{
         address::Address,
-        client::Client,
+        client::{Client, MY_IP_ADDR},
         proof::{Proof, ProofPool, UnSignedProof},
         stamp::Stamp,
         state::State,
@@ -20,7 +20,7 @@ impl State {
             count: 0,
             node_sk,
             address,
-            peers: vec![Client::new("localhost".to_string())],
+            peers: vec![Client::new(MY_IP_ADDR.to_string())],
         })
     }
     pub fn update_proof_pool(&self, pool: ProofPool) -> Self {
