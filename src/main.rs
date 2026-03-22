@@ -33,12 +33,10 @@ async fn main() {
     let Ok(mut state) = State::new(key_pair) else {
         return;
     };
-    let (tx, mut rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
-    let (state_tx, state_rx) = watch::channel(state.clone());
-    init_adapter(tx, state_rx);
+    let (mut event_rx, state_tx) = init_adapter(state.clone());
     loop {
         debug!("New state: {:?}", state);
-        let Some(event) = rx.recv().await else {
+        let Some(event) = event_rx.recv().await else {
             continue;
         };
         debug!("Got an event: {:?}", event);
