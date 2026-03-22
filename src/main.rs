@@ -2,16 +2,8 @@
 extern crate log;
 extern crate simple_logger as logger;
 
-use tokio::sync::{
-    mpsc::{self, Receiver, Sender},
-    watch,
-};
-
 use crate::{
-    adapter::init_adapter,
-    core::node::load_key,
-    effect::run::run_effect,
-    model::{event::Event, state::State},
+    adapter::init_adapter, core::node::load_key, effect::run::run_effect, model::state::State,
     update::update,
 };
 
