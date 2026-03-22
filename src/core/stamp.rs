@@ -125,10 +125,12 @@ pub fn verify_nonce(
     nonce: u32,
     id: usize,
 ) -> bool {
-    let Ok(buf) = stamp_to_buf_for_nonce(address, count, pk, nonce, id) else {
-        return false;
-    };
-    hex::encode(sha2::Sha256::digest(buf)).starts_with(&nonce_start_with_str(difficulty))
+    stamp_to_buf_for_nonce(address, count, pk, nonce, id)
+        .and_then(|buf| {
+            Ok(hex::encode(sha2::Sha256::digest(buf))
+                .starts_with(&nonce_start_with_str(difficulty)))
+        })
+        .is_ok()
 }
 pub fn verify_nonce_for_calc(memo: &[u8], nonce: u32, starts_with: &str) -> bool {
     hex::encode(sha2::Sha256::digest(
