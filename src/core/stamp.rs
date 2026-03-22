@@ -101,13 +101,12 @@ pub fn create_sign_to_stamp(
     nonce: u32,
     id: usize,
 ) -> Result<Signature, ()> {
-    let Ok(buf) = stamp_to_buf_for_sign(address, count, &pk, nonce, id) else {
-        return Err(());
-    };
     let Ok(mut signer) = Signer::new(MessageDigest::sha256(), &node_sk.key()) else {
         return Err(());
     };
-    let Ok(_) = signer.update(&buf) else {
+    let Ok(_) = stamp_to_buf_for_sign(address, count, &pk, nonce, id)
+        .and_then(|buf| Ok(signer.update(&buf)))
+    else {
         return Err(());
     };
     let Ok(sign) = signer.sign_to_vec() else {
