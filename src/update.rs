@@ -16,17 +16,20 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
             ) else {
                 return (state, Effect::None);
             };
-            (
-                match un_stamped_proof.create_signed_proof(state.node_sk.clone(), stamps.to_vec()) {
-                    Ok(proof) => state.update_pool_and_count(state.proof_pool.add_proof(
+            match un_stamped_proof.create_signed_proof(state.node_sk.clone(), stamps.to_vec()) {
+                Ok(proof) => {
+                    let state = state.update_pool_and_count(state.proof_pool.add_proof(
                         state.address.clone(),
                         state.count,
                         proof,
-                    )),
-                    Err(_) => state,
-                },
-                Effect::None,
-            )
+                    ));
+                    (
+                        state.clone(),
+                        Effect::Broadcast(P2PMessage::UpdateProofpool(state.proof_pool)),
+                    )
+                }
+                Err(_) => (state, Effect::None),
+            }
         }
         Event::P2PRequest(P2PMessage::UpdateProofpool(new_pool)) => {
             let r = state
