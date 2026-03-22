@@ -7,7 +7,10 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use tokio::sync::{mpsc::Sender, watch::Receiver};
 
-use crate::model::{address::Address, event::Event, proof::ProofPool};
+use crate::{
+    model::{address::Address, event::Event, proof::ProofPool},
+    util::status::{SystemStatus, get_status},
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum APIRequest {
@@ -57,18 +60,8 @@ async fn handle_query_pool(
     response::Json(rx.borrow().proof_pool.clone())
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-enum SystemStatusType {
-    Running,
-}
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct SystemStatus {
-    pub status: SystemStatusType,
-}
 async fn handle_status(
     State(_): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
 ) -> response::Json<SystemStatus> {
-    response::Json(SystemStatus {
-        status: SystemStatusType::Running,
-    })
+    response::Json(get_status())
 }
