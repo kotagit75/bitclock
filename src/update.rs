@@ -17,17 +17,15 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
             ) else {
                 return (state, Effect::None);
             };
-            let Ok(proof) =
-                un_stamped_proof.create_signed_proof(state.node_sk.clone(), stamps.to_vec())
-            else {
-                return (state, Effect::None);
-            };
             (
-                state.update_pool_and_count(state.proof_pool.add_proof(
-                    state.address.clone(),
-                    state.count,
-                    proof,
-                )),
+                match un_stamped_proof.create_signed_proof(state.node_sk.clone(), stamps.to_vec()) {
+                    Ok(proof) => state.update_pool_and_count(state.proof_pool.add_proof(
+                        state.address.clone(),
+                        state.count,
+                        proof,
+                    )),
+                    Err(_) => state,
+                },
                 Effect::None,
             )
         }
@@ -35,25 +33,28 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
             let r = state
                 .proof_pool
                 .update(state.address.clone(), state.count, &new_pool);
-            if r.0 {
-                return (
-                    state.update_pool_and_count(r),
-                    Effect::Broadcast(P2PMessage::UpdateProofpool(state.proof_pool)),
-                );
-            }
-            (state.update_pool_and_count(r), Effect::None)
+            (
+                state.update_pool_and_count(r.clone()),
+                match r.0 {
+                    true => Effect::Broadcast(P2PMessage::UpdateProofpool(state.proof_pool)),
+                    false => Effect::None,
+                },
+            )
         }
         Event::APIRequest(APIRequest::None) => (state, Effect::None),
         Event::APIRequest(APIRequest::Proof(data)) => {
-            let Ok((un_signed_proof, pk)) =
-                UnSignedProof::create(data, state.address.clone(), time, &state.proof_pool.clone())
-            else {
-                return (state, Effect::None);
-            };
-            (
-                state.add_to_un_signed_proof_pool(un_signed_proof.clone()),
-                Effect::Broadcast(P2PMessage::RequestStamp(pk, un_signed_proof.difficulty)),
-            )
+            match UnSignedProof::create(
+                data,
+                state.address.clone(),
+                time,
+                &state.proof_pool.clone(),
+            ) {
+                Ok((un_signed_proof, pk)) => (
+                    state.add_to_un_signed_proof_pool(un_signed_proof.clone()),
+                    Effect::Broadcast(P2PMessage::RequestStamp(pk, un_signed_proof.difficulty)),
+                ),
+                Err(_) => (state, Effect::None),
+            }
         }
         Event::APIRequest(APIRequest::AddPeer(ip)) => (state.add_peer(ip), Effect::None),
     }
