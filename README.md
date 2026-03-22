@@ -36,6 +36,9 @@ $ cargo run
 # get status
 $ curl http://localhost:8080/status
 
+# get state(address, secret_key, pool, peers)
+$ curl http://localhost:8080/query
+
 # get address
 $ curl http://localhost:8080/query/address
 
@@ -48,12 +51,23 @@ $ curl http://localhost:8080/query/peers
 # add peer
 $ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' http://localhost:8080/
 
-# proof
+# create proof
 $ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"Some data"}' http://localhost:8080/
 ```
 
 > [!CAUTION]
 > Never make the `node` directory or any files within it publicly accessible. Doing so could result in the leakage of your private key.
+
+## :jigsaw: APIs
+Users can control BitClock via an HTTP server.
+
+| implemented | method | endpoint | feature |
+| ---- | ---- | ---- | ---- |
+| <ul><li> [x] </ul> | `POST` | / | execute command |
+| <ul><li> [x] </ul> | `GET` | /status | get status |
+| <ul><li> [x] </ul> | `GET` | /address | get address |
+| <ul><li> [x] </ul> | `GET` | /pool | get proof pool |
+| <ul><li> [x] </ul> | `GET` | /peers | get peers |
 
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
