@@ -1,3 +1,5 @@
+use clap::Parser;
+
 #[macro_use]
 extern crate log;
 extern crate simple_logger as logger;
@@ -19,10 +21,17 @@ mod model;
 mod update;
 mod util;
 
+#[derive(Parser, Debug)]
+struct Args {
+    #[arg(short, long, default_value_t = log::Level::Info)]
+    level: log::Level,
+}
+
 #[tokio::main]
 async fn main() {
-    simple_logger::init_with_level(log::Level::Debug).unwrap();
+    let args = Args::parse();
 
+    simple_logger::init_with_level(args.level).unwrap();
     let Ok((mut state, (mut event_rx, state_tx))) = init().await else {
         return;
     };
