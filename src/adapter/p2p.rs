@@ -18,7 +18,7 @@ pub enum P2PMessage {
     UpdateProofpool(ProofPool),
 }
 
-pub const P2P_PORT: u32 = 3000;
+pub const P2P_PORT: u32 = 62697;
 pub async fn init_p2p(tx: Sender<Event>) {
     let app = Router::new()
         .route("/", post(handle_message))
