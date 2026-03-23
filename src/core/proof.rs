@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::cmp::{Ordering, max};
 use std::collections::HashSet;
 
 use openssl::hash::MessageDigest;
@@ -11,7 +11,7 @@ use crate::model::proof::{Proof, ProofPool, UnSignedProof};
 use crate::model::signature::Signature;
 use crate::model::stamp::Stamp;
 use crate::util::key::{PK, SK, generate_pk_and_sk};
-use crate::util::median::median;
+use crate::util::math::median;
 
 pub const PROOF_KEY_BITS: u32 = 512;
 
@@ -308,13 +308,12 @@ impl ProofPool {
         if is_valid_proof(proof.clone()) && self.check_proof(proof.clone()) {
             let mut new_pool = self.pool.clone();
             let is_inserted = new_pool.insert(proof.clone());
-            if proof
-                .stamps
-                .iter()
-                .find(|stamp| stamp.address == address)
-                .is_some()
-            {
-                return (is_inserted, ProofPool { pool: new_pool }, count + 1);
+            if let Some(my_stamp) = proof.stamps.iter().find(|stamp| stamp.address == address) {
+                return (
+                    is_inserted,
+                    ProofPool { pool: new_pool },
+                    max(count, my_stamp.count),
+                );
             } else {
                 return (is_inserted, ProofPool { pool: new_pool }, count);
             }
