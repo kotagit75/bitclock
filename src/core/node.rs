@@ -10,10 +10,12 @@ pub const NODE_DIR_PATH: &str = "node";
 pub const NODE_KEY_PATH: &str = "node/key";
 
 pub async fn load_key() -> Result<(PK, SK), ()> {
-    info!("Creating the node directory: {}", NODE_DIR_PATH);
-    if !Path::new(NODE_DIR_PATH).exists() && create_dir(NODE_DIR_PATH).await.is_err() {
-        error!("Failed to create the node directory");
-        return Err(());
+    if !Path::new(NODE_DIR_PATH).exists() {
+        info!("Creating the node directory: {}", NODE_DIR_PATH);
+        if create_dir(NODE_DIR_PATH).await.is_err() {
+            error!("Failed to create the node directory");
+            return Err(());
+        }
     }
     if Path::new(NODE_KEY_PATH).exists() {
         return read_key().await;
