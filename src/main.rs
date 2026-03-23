@@ -58,6 +58,7 @@ async fn main() {
         tokio::spawn(async move {
             let mut effect_opt = Some(effect);
             while let Some(effect) = effect_opt {
+                debug!("Running effect: {:?}", effect);
                 effect_opt = run_effect(state_clone.clone(), effect).await;
             }
         });
