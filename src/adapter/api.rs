@@ -18,8 +18,11 @@ pub enum APIRequest {
     Proof(String /*data */),
 }
 
-pub const API_PORT: u32 = 8080;
-pub async fn init_api(tx: Sender<Event>, state_rx: Receiver<crate::model::state::State>) {
+pub async fn init_api(
+    tx: Sender<Event>,
+    state_rx: Receiver<crate::model::state::State>,
+    api_port: u32,
+) {
     let app = Router::new()
         .route("/", post(handle_request))
         .route("/query", get(handle_query))
@@ -27,10 +30,10 @@ pub async fn init_api(tx: Sender<Event>, state_rx: Receiver<crate::model::state:
         .route("/query/pool", get(handle_query_pool))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", API_PORT))
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", api_port))
         .await
         .unwrap();
-    info!("API server is running on http://localhost:{}", API_PORT);
+    info!("API server is running on http://localhost:{}", api_port);
     axum::serve(listener, app).await.unwrap();
 }
 

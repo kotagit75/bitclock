@@ -11,7 +11,7 @@ use crate::{
 pub mod api;
 pub mod p2p;
 
-pub fn init_adapter(state: State) -> (Receiver<Event>, watch::Sender<State>) {
+pub fn init_adapter(state: State, api_port: u32) -> (Receiver<Event>, watch::Sender<State>) {
     let (tx, event_rx): (Sender<Event>, Receiver<Event>) = mpsc::channel(100);
     let (state_tx, state_rx): (watch::Sender<State>, watch::Receiver<State>) =
         watch::channel(state);
@@ -23,7 +23,7 @@ pub fn init_adapter(state: State) -> (Receiver<Event>, watch::Sender<State>) {
         init_p2p(tx_clone).await;
     });
     tokio::spawn(async move {
-        init_api(tx_clone2, rx_clone).await;
+        init_api(tx_clone2, rx_clone, api_port).await;
     });
     return (event_rx, state_tx);
 }

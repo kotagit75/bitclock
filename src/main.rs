@@ -26,6 +26,9 @@ mod util;
 struct Args {
     #[arg(short, long, default_value_t = log::Level::Info)]
     level: log::Level,
+
+    #[arg(short, long, default_value_t = 8080)]
+    api_port: u32,
 }
 
 #[tokio::main]
@@ -36,7 +39,7 @@ async fn main() {
 
     info!("BitClock is booting up");
     info!("{:?}", get_status());
-    let Ok((mut state, (mut event_rx, state_tx))) = init().await else {
+    let Ok((mut state, (mut event_rx, state_tx))) = init(args).await else {
         return;
     };
 
@@ -62,7 +65,7 @@ async fn main() {
     }
 }
 
-async fn init() -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
+async fn init(args: Args) -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
     let Ok(key_pair) = load_key().await else {
         error!("Failed to load the private key");
         return Err(());
@@ -71,5 +74,5 @@ async fn init() -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>))
         error!("Failed to create state");
         return Err(());
     };
-    Ok((state.clone(), init_adapter(state)))
+    Ok((state.clone(), init_adapter(state, args.api_port)))
 }
