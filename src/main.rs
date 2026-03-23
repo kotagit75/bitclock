@@ -12,6 +12,7 @@ use crate::{
     effect::run::run_effect,
     model::{event::Event, state::State},
     update::update,
+    util::status::get_status,
 };
 
 mod adapter;
@@ -34,6 +35,7 @@ async fn main() {
     simple_logger::init_with_level(args.level).unwrap();
 
     info!("BitClock is booting up");
+    info!("{:?}", get_status());
     let Ok((mut state, (mut event_rx, state_tx))) = init().await else {
         return;
     };
