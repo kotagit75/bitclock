@@ -45,7 +45,7 @@ async fn main() {
 
     debug!("New state: {:?}", state);
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
-        debug!("Got an event: {:?}", event);
+        debug!("Event received: {:?}", event);
         Some(update(
             state.clone(),
             event,
