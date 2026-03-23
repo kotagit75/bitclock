@@ -53,6 +53,15 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' htt
 
 # create proof
 $ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"Some data"}' http://localhost:8080/
+
+# display help
+$ cargo run -- -h
+Usage: bitclock [OPTIONS]
+
+Options:
+  -l, --level <LEVEL>        [default: INFO]
+  -a, --api-port <API_PORT>  [default: 8080]
+  -h, --help                 Print help
 ```
 
 > [!CAUTION]
