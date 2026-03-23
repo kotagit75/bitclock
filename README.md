@@ -51,6 +51,9 @@ $ curl http://localhost:8080/query/pool
 # get peers
 $ curl http://localhost:8080/query/peers
 
+# find proof by secret key
+$ curl -X GET -H "Content-Type: application/json" -d '{"der": "secret_key"}' http://localhost:8080/query/find
+
 # add peer
 $ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' http://localhost:8080/
 
