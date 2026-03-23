@@ -47,7 +47,12 @@ async fn main() {
         state = new_state.clone();
         let _ = state_tx.send(state.clone());
         let state_clone = state.clone();
-        tokio::spawn(async move { run_effect(state_clone, effect).await });
+        tokio::spawn(async move {
+            let mut effect_opt = Some(effect);
+            while let Some(effect) = effect_opt {
+                effect_opt = run_effect(state_clone.clone(), effect).await;
+            }
+        });
         debug!("New state: {:?}", state);
     }
 }
