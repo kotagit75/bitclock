@@ -18,7 +18,7 @@ BitClock is a ledger-free distributed timestamp system. You can issue timestamps
 - ⚡ Fast timestamp creation - Once you've collected a certain number of stamps, you can create a proof right away.
 - 🔒 Instant confirmation - A proof is finalized once it is validated by the network and cannot be reversed.
 
-## Documents
+## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
 
 ## :rocket: Getting Started
