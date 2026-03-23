@@ -1,3 +1,3 @@
 pub mod key;
-pub mod median;
+pub mod math;
 pub mod status;
