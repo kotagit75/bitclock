@@ -1,13 +1,7 @@
 use crate::model::proof::ProofPool;
 
-fn min(a: usize, b: usize) -> usize {
-    if a >= b {
-        return b;
-    }
-    a
-}
 fn get_clamped<T: Clone>(arr: Vec<T>, index: usize) -> T {
-    return arr[min(index, arr.len() - 1)].clone();
+    return arr[std::cmp::min_by(index, arr.len() - 1, |a, b| a.cmp(b))].clone();
 }
 impl ProofPool {
     fn calc_actual_time(&self, end_time: i64) -> Option<i64> {
