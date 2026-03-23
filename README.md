@@ -52,13 +52,16 @@ $ curl http://localhost:8080/query/pool
 $ curl http://localhost:8080/query/peers
 
 # find proof by secret key
-$ curl -X GET -H "Content-Type: application/json" -d '{"der": "secret_key"}' http://localhost:8080/query/find
+$ curl -X GET -H "Content-Type: application/json" -d '{"der": "[secret_key]"}' http://localhost:8080/query/find
 
 # add peer
-$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"peerIP"}' http://localhost:8080/
+$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"[peer IP]"}' http://localhost:8080/
 
 # create proof
-$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"Some data"}' http://localhost:8080/
+$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"[Some data]"}' http://localhost:8080/
+
+# compare the issuance times of the two proofs
+$ curl -X GET -H "Content-Type: application/json" -d '{"sk1":{"der": "[secret_key1]"}, "sk2":{"der": "[secret_key2]"}}' http://localhost:8080/query/compare
 
 # display help
 $ cargo run -- -h
@@ -84,6 +87,7 @@ Users can control BitClock via an HTTP server.
 | <ul><li> [x] </ul> | `GET` | /query/address | get address |
 | <ul><li> [x] </ul> | `GET` | /query/pool | get proof pool |
 | <ul><li> [x] </ul> | `GET` | /query/peers | get peers |
+| <ul><li> [x] </ul> | `GET` | /query/compare | compare the issuance times of the two proofs |
 
 ### Commands that can be executed at the `/` endpoint
 - Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
