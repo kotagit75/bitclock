@@ -342,4 +342,12 @@ impl ProofPool {
         }
         (false, proof_pool, count)
     }
+
+    pub fn find_by_address(&self, address: &Address) -> Vec<Proof> {
+        self.pool
+            .iter()
+            .filter(|proof| proof.stamps.iter().any(|stamp| stamp.address == *address))
+            .cloned()
+            .collect()
+    }
 }
