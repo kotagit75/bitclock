@@ -78,5 +78,9 @@ Users can control BitClock via an HTTP server.
 | <ul><li> [x] </ul> | `GET` | /pool | get proof pool |
 | <ul><li> [x] </ul> | `GET` | /peers | get peers |
 
+### Commands that can be executed at the `/` endpoint
+- Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
+- Create proof - Post a request with `{"Proof": "some data"}` in the body
+
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
