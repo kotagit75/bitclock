@@ -38,7 +38,7 @@ pub async fn init_api(
         .route("/query/find", get(handle_query_find_by_sk))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", api_port))
+    let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", api_port))
         .await
         .unwrap();
     info!("API server is running on http://localhost:{}", api_port);
