@@ -13,7 +13,10 @@ use crate::{
         event::Event,
         proof::{Proof, ProofPool},
     },
-    util::status::{SystemStatus, get_status},
+    util::{
+        key::SK,
+        status::{SystemStatus, get_status},
+    },
 };
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -32,7 +35,7 @@ pub async fn init_api(
         .route("/query", get(handle_query))
         .route("/query/address", get(handle_query_address))
         .route("/query/pool", get(handle_query_pool))
-        .route("/query/find", get(handle_query_find_by_address))
+        .route("/query/find", get(handle_query_find_by_sk))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", api_port))
@@ -68,11 +71,11 @@ async fn handle_query_pool(
     response::Json(rx.borrow().proof_pool.clone())
 }
 
-async fn handle_query_find_by_address(
+async fn handle_query_find_by_sk(
     State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
-    extract::Json(address): extract::Json<Address>,
+    extract::Json(sk): extract::Json<SK>,
 ) -> response::Json<Vec<Proof>> {
-    response::Json(rx.borrow().proof_pool.clone().find_by_address(&address))
+    response::Json(rx.borrow().proof_pool.clone().find_by_sk(&sk))
 }
 
 async fn handle_status(
