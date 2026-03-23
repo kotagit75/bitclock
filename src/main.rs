@@ -32,9 +32,12 @@ async fn main() {
     let args = Args::parse();
 
     simple_logger::init_with_level(args.level).unwrap();
+
+    info!("BitClock is booting up");
     let Ok((mut state, (mut event_rx, state_tx))) = init().await else {
         return;
     };
+
     debug!("New state: {:?}", state);
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
         debug!("Got an event: {:?}", event);
