@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use axum::{
     Router,
     extract::{self, State},
@@ -8,6 +10,7 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::{mpsc::Sender, watch::Receiver};
 
 use crate::{
+    core::proof::compare_time,
     model::{
         address::Address,
         event::Event,
@@ -36,6 +39,7 @@ pub async fn init_api(
         .route("/query/address", get(handle_query_address))
         .route("/query/pool", get(handle_query_pool))
         .route("/query/find", get(handle_query_find_by_sk))
+        .route("/query/compare", get(handle_query_compare_time))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
     let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", api_port))
@@ -43,6 +47,22 @@ pub async fn init_api(
         .unwrap();
     info!("API server is running on http://localhost:{}", api_port);
     axum::serve(listener, app).await.unwrap();
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum ApiOrdering {
+    Less,
+    Equal,
+    Greater,
+}
+impl From<Ordering> for ApiOrdering {
+    fn from(ordering: Ordering) -> Self {
+        match ordering {
+            Ordering::Less => ApiOrdering::Less,
+            Ordering::Equal => ApiOrdering::Equal,
+            Ordering::Greater => ApiOrdering::Greater,
+        }
+    }
 }
 
 async fn handle_command(
@@ -74,8 +94,27 @@ async fn handle_query_pool(
 async fn handle_query_find_by_sk(
     State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
     extract::Json(sk): extract::Json<SK>,
-) -> response::Json<Vec<Proof>> {
+) -> response::Json<Option<Proof>> {
     response::Json(rx.borrow().proof_pool.clone().find_by_sk(&sk))
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+struct SKPair {
+    sk1: SK,
+    sk2: SK,
+}
+async fn handle_query_compare_time(
+    State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
+    extract::Json(sk_pair): extract::Json<SKPair>,
+) -> response::Json<Option<ApiOrdering>> {
+    let Some(proof1) = rx.borrow().proof_pool.find_by_sk(&sk_pair.sk1) else {
+        return response::Json(None);
+    };
+    let Some(proof2) = rx.borrow().proof_pool.find_by_sk(&sk_pair.sk2) else {
+        return response::Json(None);
+    };
+    let ord = ApiOrdering::from(compare_time(&proof1, &proof2));
+    response::Json(Some(ord))
 }
 
 async fn handle_status(
