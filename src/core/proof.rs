@@ -136,7 +136,7 @@ pub fn create_sign_to_proof(
 }
 
 pub fn calc_number_of_stamps() -> usize {
-    1
+    1000
 }
 
 pub fn is_valid_proof(proof: Proof) -> bool {
@@ -167,7 +167,7 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
                 .stamps
                 .iter()
                 .filter(|stamp| stamp.address == address)
-                .last()
+                .max_by_key(|stamp| stamp.count)
                 .cloned()
         })
         .flatten()
@@ -178,7 +178,7 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
                 .stamps
                 .iter()
                 .filter(|stamp| stamp.address == address)
-                .last()
+                .max_by_key(|stamp| stamp.count)
                 .cloned()
         })
         .flatten()
