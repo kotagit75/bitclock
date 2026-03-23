@@ -4,7 +4,7 @@ use crate::{
     model::{client::Client, effect::Effect, stamp::Stamp, state::State},
 };
 
-pub async fn run_effect(state: State, effect: Effect) {
+pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
     match effect {
         Effect::None => {}
         Effect::CreateStamp(pk, difficulty) => {
@@ -12,25 +12,25 @@ pub async fn run_effect(state: State, effect: Effect) {
             let count = state.count + 1;
             let id = 0;
             let nonce = calc_nonce(difficulty, &address, count, &pk, id);
-            let Ok(sign) =
+            if let Ok(sign) =
                 create_sign_to_stamp(state.node_sk, &address, count, pk.clone(), nonce, id)
-            else {
-                return;
-            };
-            let stamp = Stamp {
-                address,
-                count,
-                pk: pk.clone(),
-                nonce,
-                id,
-                sign,
-            };
-            broadcast(state.peers, P2PMessage::ResponceStamp(pk, stamp)).await;
+            {
+                let stamp = Stamp {
+                    address,
+                    count,
+                    pk: pk.clone(),
+                    nonce,
+                    id,
+                    sign,
+                };
+                return Some(Effect::Broadcast(P2PMessage::ResponceStamp(pk, stamp)));
+            }
         }
         Effect::Broadcast(message) => {
             broadcast(state.peers, message).await;
         }
     }
+    None
 }
 
 async fn broadcast(peers: Vec<Client>, message: P2PMessage) {
