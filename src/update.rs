@@ -1,4 +1,4 @@
-use crate::adapter::api::APIRequest;
+use crate::adapter::api::APICommand;
 use crate::adapter::p2p::P2PMessage;
 use crate::model::proof::UnSignedProof;
 use crate::model::{effect::Effect, event::Event, state::State};
@@ -43,7 +43,7 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
                 },
             )
         }
-        Event::APIRequest(APIRequest::Proof(data)) => {
+        Event::APIRequest(APICommand::Proof(data)) => {
             match UnSignedProof::create(
                 data,
                 state.address.clone(),
@@ -57,6 +57,6 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Effect) {
                 Err(_) => (state, Effect::None),
             }
         }
-        Event::APIRequest(APIRequest::AddPeer(ip)) => (state.add_peer(ip), Effect::None),
+        Event::APIRequest(APICommand::AddPeer(ip)) => (state.add_peer(ip), Effect::None),
     }
 }

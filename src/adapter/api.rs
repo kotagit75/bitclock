@@ -20,7 +20,7 @@ use crate::{
 };
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum APIRequest {
+pub enum APICommand {
     AddPeer(String /*ip */),
     Proof(String /*data */),
 }
@@ -31,7 +31,7 @@ pub async fn init_api(
     api_port: u32,
 ) {
     let app = Router::new()
-        .route("/", post(handle_request))
+        .route("/", post(handle_command))
         .route("/query", get(handle_query))
         .route("/query/address", get(handle_query_address))
         .route("/query/pool", get(handle_query_pool))
@@ -45,9 +45,9 @@ pub async fn init_api(
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn handle_request(
+async fn handle_command(
     State((tx, _)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
-    extract::Json(message): extract::Json<APIRequest>,
+    extract::Json(message): extract::Json<APICommand>,
 ) -> &'static str {
     let _ = tx.send(Event::APIRequest(message)).await;
     ""
