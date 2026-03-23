@@ -80,9 +80,10 @@ Users can control BitClock via an HTTP server.
 | ---- | ---- | ---- | ---- |
 | <ul><li> [x] </ul> | `POST` | / | execute command |
 | <ul><li> [x] </ul> | `GET` | /status | get status |
-| <ul><li> [x] </ul> | `GET` | /address | get address |
-| <ul><li> [x] </ul> | `GET` | /pool | get proof pool |
-| <ul><li> [x] </ul> | `GET` | /peers | get peers |
+| <ul><li> [x] </ul> | `GET` | /query | get state |
+| <ul><li> [x] </ul> | `GET` | /query/address | get address |
+| <ul><li> [x] </ul> | `GET` | /query/pool | get proof pool |
+| <ul><li> [x] </ul> | `GET` | /query/peers | get peers |
 
 ### Commands that can be executed at the `/` endpoint
 - Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
