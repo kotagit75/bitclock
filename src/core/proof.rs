@@ -343,10 +343,10 @@ impl ProofPool {
         (false, proof_pool, count)
     }
 
-    pub fn find_by_address(&self, address: &Address) -> Vec<Proof> {
+    pub fn find_by_sk(&self, sk: &SK) -> Vec<Proof> {
         self.pool
             .iter()
-            .filter(|proof| proof.stamps.iter().any(|stamp| stamp.address == *address))
+            .filter(|proof| proof.sk == sk.clone())
             .cloned()
             .collect()
     }
