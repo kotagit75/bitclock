@@ -2,8 +2,13 @@
 extern crate log;
 extern crate simple_logger as logger;
 
+use tokio::sync::{mpsc, watch};
+
 use crate::{
-    adapter::init_adapter, core::node::load_key, effect::run::run_effect, model::state::State,
+    adapter::init_adapter,
+    core::node::load_key,
+    effect::run::run_effect,
+    model::{event::Event, state::State},
     update::update,
 };
 
@@ -18,28 +23,34 @@ mod util;
 async fn main() {
     simple_logger::init_with_level(log::Level::Debug).unwrap();
 
-    let Ok(key_pair) = load_key().await else {
-        error!("Failed to load the private key");
+    let Ok((mut state, (mut event_rx, state_tx))) = init().await else {
         return;
     };
-    let Ok(mut state) = State::new(key_pair) else {
-        return;
-    };
-    let (mut event_rx, state_tx) = init_adapter(state.clone());
-    loop {
-        debug!("New state: {:?}", state);
-        let Some(event) = event_rx.recv().await else {
-            continue;
-        };
+    debug!("New state: {:?}", state);
+    while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
         debug!("Got an event: {:?}", event);
-        let (new_state, effect) = update(
+        Some(update(
             state.clone(),
             event,
             chrono::prelude::Utc::now().timestamp_millis(),
-        );
-        state = new_state;
+        ))
+    }) {
+        state = new_state.clone();
         let _ = state_tx.send(state.clone());
         let state_clone = state.clone();
         tokio::spawn(async move { run_effect(state_clone, effect).await });
+        debug!("New state: {:?}", state);
     }
+}
+
+async fn init() -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
+    let Ok(key_pair) = load_key().await else {
+        error!("Failed to load the private key");
+        return Err(());
+    };
+    let Ok(state) = State::new(key_pair) else {
+        error!("Failed to create state");
+        return Err(());
+    };
+    Ok((state.clone(), init_adapter(state)))
 }
