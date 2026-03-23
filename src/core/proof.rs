@@ -136,7 +136,7 @@ pub fn create_sign_to_proof(
 }
 
 pub fn calc_number_of_stamps() -> usize {
-    1000
+    1
 }
 
 pub fn is_valid_proof(proof: Proof) -> bool {
@@ -343,11 +343,11 @@ impl ProofPool {
         (false, proof_pool, count)
     }
 
-    pub fn find_by_sk(&self, sk: &SK) -> Vec<Proof> {
+    pub fn find_by_sk(&self, sk: &SK) -> Option<Proof> {
         self.pool
             .iter()
             .filter(|proof| proof.sk == sk.clone())
+            .last()
             .cloned()
-            .collect()
     }
 }
