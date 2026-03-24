@@ -333,4 +333,8 @@ impl ProofPool {
             .last()
             .cloned()
     }
+
+    pub fn verify(&self, proof: &Proof) -> bool {
+        self.pool.iter().any(|p| p == proof)
+    }
 }
