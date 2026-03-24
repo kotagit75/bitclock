@@ -6,7 +6,7 @@ use clap::Parser;
 
 use crate::{
     boot::{Args, boot},
-    effect::run::run_effect,
+    effect::loop_effect_run,
     update::update,
 };
 
@@ -40,13 +40,7 @@ async fn main() {
         state = new_state.clone();
         let _ = state_tx.send(state.clone());
         let state_clone = state.clone();
-        tokio::spawn(async move {
-            let mut effect_opt = Some(effect);
-            while let Some(effect) = effect_opt {
-                debug!("Running effect: {:?}", effect);
-                effect_opt = run_effect(state_clone.clone(), effect).await;
-            }
-        });
+        tokio::spawn(async move { loop_effect_run(state_clone, effect).await });
         debug!("New state: {:?}", state);
     }
 }
