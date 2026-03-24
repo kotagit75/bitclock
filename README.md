@@ -3,7 +3,7 @@
     <h1>BitClock</h1>
 </div>
 
-BitClock is a ledger-free distributed timestamp system. You can issue timestamps without relying on centralized servers or large-scale blockchains. By each node generate and share stamps and compile them as proof, we can verify the order in which the data was generated.
+BitClock is a ledger-free distributed timestamp system. It allows timestamps to be issued without the need for consensus. Each node generates and shares stamps, which are then compiled into a proof, allowing the order in which the data was generated to be verified.
 
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
