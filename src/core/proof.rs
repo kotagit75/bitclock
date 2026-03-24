@@ -15,23 +15,6 @@ use crate::util::math::median;
 
 pub const PROOF_KEY_BITS: u32 = 512;
 
-impl PartialEq for Proof {
-    fn eq(&self, other: &Self) -> bool {
-        compare_time(self, other) == Ordering::Equal
-    }
-}
-impl PartialOrd for Proof {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(compare_time(self, other))
-    }
-}
-impl Eq for Proof {}
-impl Ord for Proof {
-    fn cmp(&self, other: &Self) -> Ordering {
-        compare_time(self, other)
-    }
-}
-
 impl Proof {
     pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
         proof_to_buf_for_sign(
