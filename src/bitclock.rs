@@ -1,15 +1,8 @@
-use clap::Parser;
+use crate::{boot::boot, effect::loop_effect_run, update::update};
 
-use crate::{
-    boot::{Args, boot},
-    effect::loop_effect_run,
-    update::update,
-};
-
-pub async fn start() {
-    let args = Args::parse();
-    simple_logger::init_with_level(args.level).unwrap();
-    let Ok((mut state, (mut event_rx, state_tx))) = boot(args).await else {
+pub async fn start(level: log::Level) {
+    simple_logger::init_with_level(level).unwrap();
+    let Ok((mut state, (mut event_rx, state_tx))) = boot(8080).await else {
         return;
     };
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {

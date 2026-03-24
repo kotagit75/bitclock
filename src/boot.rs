@@ -1,4 +1,3 @@
-use clap::Parser;
 use tokio::sync::{mpsc, watch};
 
 use crate::{
@@ -8,17 +7,8 @@ use crate::{
     util::status::get_status,
 };
 
-#[derive(Parser, Debug)]
-pub struct Args {
-    #[arg(short, long, default_value_t = log::Level::Info)]
-    pub level: log::Level,
-
-    #[arg(short, long, default_value_t = 8080)]
-    pub api_port: u32,
-}
-
 pub async fn boot(
-    args: Args,
+    api_port: u32,
 ) -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
     info!("BitClock is booting up");
     info!("{:?}", get_status());
@@ -30,5 +20,5 @@ pub async fn boot(
         error!("Failed to create state");
         return Err(());
     };
-    Ok((state.clone(), init_adapter(state, args.api_port)))
+    Ok((state.clone(), init_adapter(state, api_port)))
 }

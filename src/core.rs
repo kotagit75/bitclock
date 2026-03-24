@@ -1,3 +1,4 @@
+pub mod client;
 pub mod difficulty;
 pub mod node;
 pub mod proof;
