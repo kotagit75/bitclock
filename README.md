@@ -18,6 +18,10 @@ BitClock is a ledger-free distributed timestamp system. You can issue timestamps
 - 🕰️ Distributed timestamp without ledger - We can verify timestamp without global ledgers or blockchains.
 - ⚡ Fast timestamp creation - Once you've collected a certain number of stamps, you can create a proof right away.
 
+## :dart: Use case
+### Digital Certificates
+With BitClock, you can not only create digital certificates but also prove their order.
+
 ## :building_construction: How it works?
 1. A client creates a Proof request
 2. The request is broadcast to the network
@@ -108,10 +112,6 @@ Users can control BitClock via an HTTP server.
 ### Commands that can be executed at the `/` endpoint
 - Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
 - Create proof - Post a request with `{"Proof": "some data"}` in the body
-
-## :dart: Use case
-### Digital Certificates
-With BitClock, you can not only create digital certificates but also prove their order.
 
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
