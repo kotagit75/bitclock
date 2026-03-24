@@ -39,6 +39,12 @@ $ cargo run
 # get status
 $ curl http://localhost:8080/status
 
+# add peer
+$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"[peer IP]"}' http://localhost:8080/
+
+# create proof
+$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"[Some data]"}' http://localhost:8080/
+
 # get state(address, secret_key, pool, peers)
 $ curl http://localhost:8080/query
 
@@ -54,11 +60,8 @@ $ curl http://localhost:8080/query/peers
 # find proof by secret key
 $ curl -X GET -H "Content-Type: application/json" -d '{"der": "[secret_key]"}' http://localhost:8080/query/find
 
-# add peer
-$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"[peer IP]"}' http://localhost:8080/
-
-# create proof
-$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"[Some data]"}' http://localhost:8080/
+# verify proof
+$ curl -X GET -H "Content-Type: application/json" -d '[Proof json]' http://localhost:8080/query/verify
 
 # compare the issuance times of the two proofs
 $ curl -X GET -H "Content-Type: application/json" -d '{"sk1":{"der": "[secret_key1]"}, "sk2":{"der": "[secret_key2]"}}' http://localhost:8080/query/compare
