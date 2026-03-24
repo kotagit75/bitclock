@@ -7,7 +7,7 @@ use crate::{
     util::key::SK,
 };
 
-#[derive(Clone, Debug, Serialize, Deserialize, Hash)]
+#[derive(Clone, Debug, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Proof {
     pub data: String,
     pub stamps: Vec<Stamp>,

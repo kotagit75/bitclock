@@ -5,7 +5,7 @@ use crate::{
     util::key::PK,
 };
 
-#[derive(Clone, Debug, Serialize, Deserialize, Hash)]
+#[derive(Clone, Debug, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Stamp {
     pub address: Address,
     pub count: u32,

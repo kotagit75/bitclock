@@ -28,7 +28,7 @@ impl PK {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Hash)]
+#[derive(Clone, Debug, Serialize, Deserialize, Hash, Eq)]
 pub struct SK {
     pub der: String,
 }
