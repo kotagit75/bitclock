@@ -18,6 +18,15 @@ BitClock is a ledger-free distributed timestamp system. You can issue timestamps
 - 🕰️ Distributed timestamp without ledger - We can verify timestamp without global ledgers or blockchains.
 - ⚡ Fast timestamp creation - Once you've collected a certain number of stamps, you can create a proof right away.
 
+## :building_construction: How it works?
+1. A client creates a Proof request
+2. The request is broadcast to the network
+3. Nodes generate Stamps for the Proof
+4. Stamps are collected and aggregated
+5. Once a threshold is reached:
+6. The Proof is finalized
+7. It is broadcast to the network
+
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
 
