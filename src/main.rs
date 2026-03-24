@@ -21,13 +21,10 @@ mod util;
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-
     simple_logger::init_with_level(args.level).unwrap();
-
     let Ok((mut state, (mut event_rx, state_tx))) = boot(args).await else {
         return;
     };
-
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
         debug!("Event received: {:?}", event);
         Some(update(
