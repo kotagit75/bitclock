@@ -27,6 +27,10 @@ BitClock is a ledger-free distributed timestamp system. You can issue timestamps
 6. The Proof is finalized
 7. It is broadcast to the network
 
+## :clock4: Time sequence
+BitClock does not have a global clock.
+Instead, each node maintains a counter that serves as its local time, and the timeline is determined by observing changes in these counters. This timeline determination is performed by `compare_time`.
+
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
 
