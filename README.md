@@ -109,7 +109,7 @@ Users can control BitClock via an HTTP server.
 - Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
 - Create proof - Post a request with `{"Proof": "some data"}` in the body
 
-## :bullseye: Use case
+## :dart: Use case
 ### :page_facing_up: Digital Certificates
 
 ## :ticket: License
