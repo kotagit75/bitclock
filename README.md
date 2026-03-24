@@ -110,7 +110,7 @@ Users can control BitClock via an HTTP server.
 - Create proof - Post a request with `{"Proof": "some data"}` in the body
 
 ## :dart: Use case
-### :page_facing_up: Digital Certificates
+### Digital Certificates
 With BitClock, you can not only create digital certificates but also prove their order.
 
 ## :ticket: License
