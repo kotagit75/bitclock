@@ -5,7 +5,8 @@
 
 BitClock is a ledger-free distributed timestamp system. It allows timestamps to be issued without the need for consensus. Each node generates and shares stamps, which are then compiled into a proof, allowing the order in which the data was generated to be verified.
 
-[![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/kotagit75/bitclock)
 
 > [!NOTE]
 > BitClock is currently in active development. The API and features may change without notice.
