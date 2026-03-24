@@ -89,7 +89,6 @@ Usage: bitclock [OPTIONS]
 
 Options:
   -l, --level <LEVEL>        [default: INFO]
-  -a, --api-port <API_PORT>  [default: 8080]
   -h, --help                 Print help
 ```
 
