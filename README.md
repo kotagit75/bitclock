@@ -111,6 +111,7 @@ Users can control BitClock via an HTTP server.
 
 ## :dart: Use case
 ### :page_facing_up: Digital Certificates
+With BitClock, you can not only create digital certificates but also prove their order.
 
 ## :ticket: License
 [BitClock is under the MIT License.](LICENSE)
