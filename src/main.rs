@@ -28,7 +28,6 @@ async fn main() {
         return;
     };
 
-    debug!("New state: {:?}", state);
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
         debug!("Event received: {:?}", event);
         Some(update(
@@ -41,6 +40,5 @@ async fn main() {
         let _ = state_tx.send(state.clone());
         let state_clone = state.clone();
         tokio::spawn(async move { loop_effect_run(state_clone, effect).await });
-        debug!("New state: {:?}", state);
     }
 }
