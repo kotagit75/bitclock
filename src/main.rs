@@ -1,35 +1,22 @@
-use clap::Parser;
-
 #[macro_use]
 extern crate log;
 extern crate simple_logger as logger;
 
-use tokio::sync::{mpsc, watch};
+use clap::Parser;
 
 use crate::{
-    adapter::init_adapter,
-    core::node::load_key,
+    boot::{Args, boot},
     effect::run::run_effect,
-    model::{event::Event, state::State},
     update::update,
-    util::status::get_status,
 };
 
 mod adapter;
+mod boot;
 mod core;
 mod effect;
 mod model;
 mod update;
 mod util;
-
-#[derive(Parser, Debug)]
-struct Args {
-    #[arg(short, long, default_value_t = log::Level::Info)]
-    level: log::Level,
-
-    #[arg(short, long, default_value_t = 8080)]
-    api_port: u32,
-}
 
 #[tokio::main]
 async fn main() {
@@ -37,9 +24,7 @@ async fn main() {
 
     simple_logger::init_with_level(args.level).unwrap();
 
-    info!("BitClock is booting up");
-    info!("{:?}", get_status());
-    let Ok((mut state, (mut event_rx, state_tx))) = init(args).await else {
+    let Ok((mut state, (mut event_rx, state_tx))) = boot(args).await else {
         return;
     };
 
@@ -64,16 +49,4 @@ async fn main() {
         });
         debug!("New state: {:?}", state);
     }
-}
-
-async fn init(args: Args) -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
-    let Ok(key_pair) = load_key().await else {
-        error!("Failed to load the private key");
-        return Err(());
-    };
-    let Ok(state) = State::new(key_pair) else {
-        error!("Failed to create state");
-        return Err(());
-    };
-    Ok((state.clone(), init_adapter(state, args.api_port)))
 }
