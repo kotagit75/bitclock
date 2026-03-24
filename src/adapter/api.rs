@@ -39,6 +39,7 @@ pub async fn init_api(
         .route("/query/address", get(handle_query_address))
         .route("/query/pool", get(handle_query_pool))
         .route("/query/find", get(handle_query_find_by_sk))
+        .route("/query/verify", get(handle_query_verify))
         .route("/query/compare", get(handle_query_compare_time))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
@@ -96,6 +97,13 @@ async fn handle_query_find_by_sk(
     extract::Json(sk): extract::Json<SK>,
 ) -> response::Json<Option<Proof>> {
     response::Json(rx.borrow().proof_pool.clone().find_by_sk(&sk))
+}
+
+async fn handle_query_verify(
+    State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
+    extract::Json(proof): extract::Json<Proof>,
+) -> response::Json<bool> {
+    response::Json(rx.borrow().proof_pool.clone().verify(&proof))
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
