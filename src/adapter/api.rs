@@ -1,19 +1,16 @@
-use std::cmp::Ordering;
-
 use axum::{
     Router,
     extract::{self, State},
     response,
     routing::{get, post},
 };
-use serde::{Deserialize, Serialize};
 use tokio::sync::{mpsc::Sender, watch::Receiver};
 
 use crate::{
     core::proof::compare_time,
     model::{
         address::Address,
-        api::APICommand,
+        api::{APICommand, ApiOrdering, SKPair},
         event::Event,
         proof::{Proof, ProofPool},
     },
@@ -43,22 +40,6 @@ pub async fn init_api(
         .unwrap();
     info!("API server is running on http://localhost:{}", api_port);
     axum::serve(listener, app).await.unwrap();
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum ApiOrdering {
-    Less,
-    Equal,
-    Greater,
-}
-impl From<Ordering> for ApiOrdering {
-    fn from(ordering: Ordering) -> Self {
-        match ordering {
-            Ordering::Less => ApiOrdering::Less,
-            Ordering::Equal => ApiOrdering::Equal,
-            Ordering::Greater => ApiOrdering::Greater,
-        }
-    }
 }
 
 async fn handle_command(
@@ -101,11 +82,6 @@ async fn handle_query_verify(
     response::Json(rx.borrow().proof_pool.clone().verify(&proof))
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct SKPair {
-    sk1: SK,
-    sk2: SK,
-}
 async fn handle_query_compare_time(
     State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
     extract::Json(sk_pair): extract::Json<SKPair>,
