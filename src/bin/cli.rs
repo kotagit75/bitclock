@@ -1,4 +1,7 @@
-use bitclock::model::{api::APICommand, state::State};
+use bitclock::{
+    model::{api::APICommand, proof::Proof, state::State},
+    util::key::SK,
+};
 use clap::{Parser, Subcommand};
 use reqwest::Client;
 
@@ -15,6 +18,8 @@ enum SubCommands {
     Pool,
     Peers,
     Proof { data: String },
+    Find { der: String },
+    Verify { proof_str: String },
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -27,15 +32,23 @@ async fn get_state() -> Result<State, reqwest::Error> {
     response.json::<State>().await
 }
 
-async fn post_api_command(command: APICommand) -> Result<State, reqwest::Error> {
+async fn verify_proof(proof: Proof) {
     let client = Client::new();
-    let response = client
-        .post("http://localhost:8080/")
-        .json(&command)
+    let _ = client
+        .post("http://localhost:8080/query/verify")
+        .json(&proof)
         .send()
         .await
         .unwrap();
-    response.json::<State>().await
+}
+
+async fn post_api_command(command: APICommand) {
+    let client = Client::new();
+    let _ = client
+        .post("http://localhost:8080/")
+        .json(&command)
+        .send()
+        .await;
 }
 
 #[tokio::main]
@@ -72,6 +85,21 @@ async fn main() {
         }
         SubCommands::Proof { data } => {
             let _ = post_api_command(APICommand::Proof(data)).await;
+        }
+        SubCommands::Find { der } => {
+            if let Some(proof) = state.proof_pool.find_by_sk(&SK { der }) {
+                let Ok(json_str) = serde_json::to_string(&proof) else {
+                    return;
+                };
+                println!("{}", json_str);
+            }
+        }
+        SubCommands::Verify { proof_str } => {
+            if let Ok(proof) = serde_json::from_str::<Proof>(&proof_str) {
+                verify_proof(proof).await;
+            } else {
+                println!("Invalid proof string");
+            }
         }
     }
 }
