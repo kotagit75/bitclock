@@ -41,45 +41,48 @@ $ git clone https://github.com/kotagit75/bitclock.git
 
 # Navigate to the project directory
 $ cd bitclock
+
+# build
+$ cargo build --release
 ```
 
 ### Usage
 ```bash
 # run
-$ cargo run --bin bitclock
+$ ./target/release/bitclock bitclock
 
 # get status
 $ curl http://localhost:8080/status
 
 # add peer
-$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"[peer IP]"}' http://localhost:8080/
+$ ./target/release/cli addpeer "[peer ip]"
 
 # create proof
-$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"[Some data]"}' http://localhost:8080/
+$ ./target/release/cli proof "[some data]"
 
 # get state(address, secret_key, pool, peers)
-$ curl http://localhost:8080/query
+$ ./target/release/cli state
 
 # get address
-$ curl http://localhost:8080/query/address
+$ ./target/release/cli address
 
 # get pool
-$ curl http://localhost:8080/query/pool
+$ ./target/release/cli pool
 
 # get peers
-$ curl http://localhost:8080/query/peers
+$ ./target/release/cli peers
 
 # find proof by secret key
-$ curl -X GET -H "Content-Type: application/json" -d '{"der": "[secret_key]"}' http://localhost:8080/query/find
+$ ./target/release/cli find "[secret key]"
 
 # verify proof
-$ curl -X GET -H "Content-Type: application/json" -d '[Proof json]' http://localhost:8080/query/verify
+$ ./target/release/cli verify "[proof]"
 
 # compare the issuance times of the two proofs
-$ curl -X GET -H "Content-Type: application/json" -d '{"sk1":{"der": "[secret_key1]"}, "sk2":{"der": "[secret_key2]"}}' http://localhost:8080/query/compare
+$ ./target/release/cli compare "[secret key1]" "[secret key2]"
 
 # display help
-$ cargo run --bin bitclock -- -h
+$ ./target/release/bitclock -h
 Usage: bitclock [OPTIONS]
 
 Options:
