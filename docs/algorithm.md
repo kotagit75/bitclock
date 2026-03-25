@@ -57,3 +57,10 @@ Properties:
 - no external input is required
 - the same result is always obtained for the same proofs
 - All nodes compute the same result
+- Finality is guaranteed
+
+## Conclusion
+BitClock is distributed timestamp system.
+Since BitClock uses Stamp and Proof:
+- **No ledger or consensus required**
+- **Instant finality**
