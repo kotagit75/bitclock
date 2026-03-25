@@ -28,7 +28,7 @@ With BitClock, you can not only create digital certificates but also prove their
 BitClock does not have a global clock.
 Instead, each node maintains a counter that serves as its local time, and the timeline is determined by observing changes in these counters. This timeline determination is performed by `compare_time`.
 
-### [How BitClock works?](docs/algorithm.md)
+### [How does BitClock works?](docs/algorithm.md)
 
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
