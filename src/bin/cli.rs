@@ -24,22 +24,18 @@ enum SubCommands {
 
 async fn get_state() -> Result<State, reqwest::Error> {
     let client = Client::new();
-    let response = client
-        .get("http://localhost:8080/query")
-        .send()
-        .await
-        .unwrap();
+    let response = client.get("http://localhost:8080/query").send().await?;
     response.json::<State>().await
 }
 
-async fn verify_proof(proof: Proof) {
+async fn verify_proof(proof: Proof) -> Result<bool, reqwest::Error> {
     let client = Client::new();
-    let _ = client
-        .post("http://localhost:8080/query/verify")
+    let response = client
+        .get("http://localhost:8080/query/verify")
         .json(&proof)
         .send()
-        .await
-        .unwrap();
+        .await?;
+    response.json::<bool>().await
 }
 
 async fn post_api_command(command: APICommand) {
@@ -63,25 +59,25 @@ async fn main() {
             let Ok(json_str) = serde_json::to_string(&state) else {
                 return;
             };
-            println!("{}", json_str);
+            print!("{}", json_str);
         }
         SubCommands::Address => {
             let Ok(json_str) = serde_json::to_string(&state.address) else {
                 return;
             };
-            println!("{}", json_str);
+            print!("{}", json_str);
         }
         SubCommands::Pool => {
             let Ok(json_str) = serde_json::to_string(&state.proof_pool) else {
                 return;
             };
-            println!("{}", json_str);
+            print!("{}", json_str);
         }
         SubCommands::Peers => {
             let Ok(json_str) = serde_json::to_string(&state.peers) else {
                 return;
             };
-            println!("{}", json_str);
+            print!("{}", json_str);
         }
         SubCommands::Proof { data } => {
             let _ = post_api_command(APICommand::Proof(data)).await;
@@ -91,14 +87,17 @@ async fn main() {
                 let Ok(json_str) = serde_json::to_string(&proof) else {
                     return;
                 };
-                println!("{}", json_str);
+                print!("{}", json_str);
             }
         }
         SubCommands::Verify { proof_str } => {
             if let Ok(proof) = serde_json::from_str::<Proof>(&proof_str) {
-                verify_proof(proof).await;
+                let Ok(result) = verify_proof(proof).await else {
+                    return;
+                };
+                print!("{}", result);
             } else {
-                println!("Invalid proof string");
+                print!("Invalid proof string");
             }
         }
     }
