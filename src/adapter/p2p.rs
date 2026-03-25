@@ -5,9 +5,11 @@ use axum::{
 };
 use tokio::sync::mpsc::Sender;
 
-use crate::model::{event::Event, p2p::P2PMessage};
+use crate::model::{
+    event::Event,
+    p2p::{P2P_PORT, P2PMessage},
+};
 
-pub const P2P_PORT: u32 = 62697;
 pub async fn init_p2p(tx: Sender<Event>) {
     let app = Router::new()
         .route("/", post(handle_message))
