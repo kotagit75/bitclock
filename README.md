@@ -46,7 +46,7 @@ $ cd bitclock
 ### Usage
 ```bash
 # run
-$ cargo run
+$ cargo run --bin bitclock
 
 # get status
 $ curl http://localhost:8080/status
@@ -79,7 +79,7 @@ $ curl -X GET -H "Content-Type: application/json" -d '[Proof json]' http://local
 $ curl -X GET -H "Content-Type: application/json" -d '{"sk1":{"der": "[secret_key1]"}, "sk2":{"der": "[secret_key2]"}}' http://localhost:8080/query/compare
 
 # display help
-$ cargo run -- -h
+$ cargo run --bin bitclock -- -h
 Usage: bitclock [OPTIONS]
 
 Options:
