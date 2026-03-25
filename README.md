@@ -5,8 +5,6 @@
 
 BitClock is a ledger-free distributed timestamp system. It allows timestamps to be issued without the need for consensus. Each node generates and shares stamps, which are then compiled into a proof, allowing the order in which the data was generated to be verified.
 
-[How BitClock works?](docs/algorithm.md)
-
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
 ![Rust](https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white)
 
@@ -22,13 +20,11 @@ BitClock is a ledger-free distributed timestamp system. It allows timestamps to 
 - 🕰️ **Distributed timestamp without ledger** - We can verify timestamp without global ledgers or blockchains.
 - ⚡ **Fast timestamp creation** - Once you've collected a certain number of stamps, you can create a proof right away.
 
+[How BitClock works?](docs/algorithm.md)
+
 ## :dart: Use case
 ### Digital Certificates
 With BitClock, you can not only create digital certificates but also prove their order.
-
-## :clock4: Time sequence
-BitClock does not have a global clock.
-Instead, each node maintains a counter that serves as its local time, and the timeline is determined by observing changes in these counters. This timeline determination is performed by `compare_time`.
 
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
