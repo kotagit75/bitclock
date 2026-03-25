@@ -1,4 +1,4 @@
-use bitclock::model::state::State;
+use bitclock::model::{api::APICommand, state::State};
 use clap::{Parser, Subcommand};
 use reqwest::Client;
 
@@ -13,6 +13,7 @@ enum SubCommands {
     State,
     Address,
     Pool,
+    Proof { data: String },
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -25,21 +26,45 @@ async fn get_state() -> Result<State, reqwest::Error> {
     response.json::<State>().await
 }
 
+async fn post_api_command(command: APICommand) -> Result<State, reqwest::Error> {
+    let client = Client::new();
+    let response = client
+        .post("http://localhost:8080/")
+        .json(&command)
+        .send()
+        .await
+        .unwrap();
+    response.json::<State>().await
+}
+
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
     let Ok(state) = get_state().await else {
         return;
     };
+
     match args.subcommand {
         SubCommands::State => {
-            println!("{:?}", state)
+            let Ok(json_str) = serde_json::to_string(&state) else {
+                return;
+            };
+            println!("{}", json_str);
         }
         SubCommands::Address => {
-            println!("{:?}", state.address)
+            let Ok(json_str) = serde_json::to_string(&state.address) else {
+                return;
+            };
+            println!("{}", json_str);
         }
         SubCommands::Pool => {
-            println!("{:?}", state.proof_pool)
+            let Ok(json_str) = serde_json::to_string(&state.proof_pool) else {
+                return;
+            };
+            println!("{}", json_str);
+        }
+        SubCommands::Proof { data } => {
+            let _ = post_api_command(APICommand::Proof(data)).await;
         }
     }
 }
