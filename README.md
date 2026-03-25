@@ -55,31 +55,31 @@ $ ./target/release/bitclock bitclock
 $ curl http://localhost:8080/status
 
 # add peer
-$ ./target/release/cli addpeer "[peer ip]"
+$ curl -X POST -H "Content-Type: application/json" -d '{"AddPeer":"[peer_IP]"}' http://localhost:8080/
 
 # create proof
-$ ./target/release/cli proof "[some data]"
+$ curl -X POST -H "Content-Type: application/json" -d '{"Proof":"[Some_data]"}' http://localhost:8080/
 
 # get state(address, secret_key, pool, peers)
-$ ./target/release/cli state
+$ curl http://localhost:8080/query
 
 # get address
-$ ./target/release/cli address
+$ curl http://localhost:8080/query/address
 
 # get pool
-$ ./target/release/cli pool
+$ curl http://localhost:8080/query/pool
 
 # get peers
-$ ./target/release/cli peers
+$ curl http://localhost:8080/query/peers
 
 # find proof by secret key
-$ ./target/release/cli find "[secret key]"
+$ curl -X GET -H "Content-Type: application/json" -d '{"der": "[secret_key]"}' http://localhost:8080/query/find
 
 # verify proof
-$ ./target/release/cli verify "[proof]"
+$ curl -X GET -H "Content-Type: application/json" -d '[proof]' http://localhost:8080/query/verify
 
 # compare the issuance times of the two proofs
-$ ./target/release/cli compare "[secret key1]" "[secret key2]"
+$ curl -X GET -H "Content-Type: application/json" -d '{"sk1":{"der": "[secret_key1]"}, "sk2":{"der": "[secret_key2]"}}' http://localhost:8080/query/compare
 
 # display help
 $ ./target/release/bitclock -h
