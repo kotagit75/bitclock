@@ -15,7 +15,7 @@ BitClock is a ledger-free distributed timestamp system. It allows timestamps to 
 > BitClock is in the process of migrating from TypeScript to Rust. Development using Rust is underway in this repository.[Proof of Concept Using TypeScript](https://github.com/kotagit75/bitclock-PoC)
 
 ## :sparkles: Features
-- 🔒 **Instant confirmation** - A proof is finalized once it is validated by the network and cannot be reversed.
+- 🔒 **Instant finality** - A proof is finalized once it is validated by the network and cannot be reversed.
 - 🏎️ **No consensus required**　- Timestamps can be issued without consensus.
 - 🕰️ **Distributed timestamp without ledger** - We can verify timestamp without global ledgers or blockchains.
 - ⚡ **Fast timestamp creation** - Once you've collected a certain number of stamps, you can create a proof right away.
