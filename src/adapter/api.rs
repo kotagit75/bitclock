@@ -13,6 +13,7 @@ use crate::{
     core::proof::compare_time,
     model::{
         address::Address,
+        api::APICommand,
         event::Event,
         proof::{Proof, ProofPool},
     },
@@ -21,12 +22,6 @@ use crate::{
         status::{SystemStatus, get_status},
     },
 };
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum APICommand {
-    AddPeer(String /*ip */),
-    Proof(String /*data */),
-}
 
 pub async fn init_api(
     tx: Sender<Event>,

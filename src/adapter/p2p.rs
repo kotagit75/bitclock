@@ -3,20 +3,9 @@ use axum::{
     extract::{self, State},
     routing::post,
 };
-use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc::Sender;
 
-use crate::{
-    model::{event::Event, proof::ProofPool, stamp::Stamp},
-    util::key::PK,
-};
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum P2PMessage {
-    RequestStamp(PK, usize /*difficulty */),
-    ResponceStamp(PK, Stamp),
-    UpdateProofpool(ProofPool),
-}
+use crate::model::{event::Event, p2p::P2PMessage};
 
 pub const P2P_PORT: u32 = 62697;
 pub async fn init_p2p(tx: Sender<Event>) {

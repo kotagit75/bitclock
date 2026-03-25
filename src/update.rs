@@ -1,5 +1,5 @@
-use crate::adapter::api::APICommand;
-use crate::adapter::p2p::P2PMessage;
+use crate::model::api::APICommand;
+use crate::model::p2p::P2PMessage;
 use crate::model::proof::UnSignedProof;
 use crate::model::{effect::Effect, event::Event, state::State};
 

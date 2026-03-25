@@ -1,7 +1,9 @@
 pub mod address;
+pub mod api;
 pub mod client;
 pub mod effect;
 pub mod event;
+pub mod p2p;
 pub mod proof;
 pub mod signature;
 pub mod stamp;

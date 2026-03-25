@@ -1,6 +1,6 @@
 use crate::{
-    adapter::p2p::{P2P_PORT, P2PMessage},
-    model::client::Client,
+    adapter::p2p::P2P_PORT,
+    model::{client::Client, p2p::P2PMessage},
 };
 
 impl Client {

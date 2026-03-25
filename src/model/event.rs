@@ -1,4 +1,4 @@
-use crate::adapter::{api::APICommand, p2p::P2PMessage};
+use crate::model::{api::APICommand, p2p::P2PMessage};
 
 #[derive(Debug)]
 pub enum Event {
