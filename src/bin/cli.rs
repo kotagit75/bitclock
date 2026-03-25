@@ -1,5 +1,9 @@
 use bitclock::{
-    model::{api::APICommand, proof::Proof, state::State},
+    model::{
+        api::{APICommand, ApiOrdering, SKPair},
+        proof::Proof,
+        state::State,
+    },
     util::key::SK,
 };
 use clap::{Parser, Subcommand};
@@ -13,13 +17,15 @@ struct Args {
 
 #[derive(Debug, Subcommand)]
 enum SubCommands {
+    AddPeer { ip: String },
+    Proof { data: String },
     State,
     Address,
     Pool,
     Peers,
-    Proof { data: String },
     Find { der: String },
     Verify { proof_str: String },
+    Compare { der1: String, der2: String },
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -36,6 +42,16 @@ async fn verify_proof(proof: Proof) -> Result<bool, reqwest::Error> {
         .send()
         .await?;
     response.json::<bool>().await
+}
+
+async fn compare_proof(keys: SKPair) -> Result<ApiOrdering, reqwest::Error> {
+    let client = Client::new();
+    let response = client
+        .get("http://localhost:8080/query/compare")
+        .json(&keys)
+        .send()
+        .await?;
+    response.json::<ApiOrdering>().await
 }
 
 async fn post_api_command(command: APICommand) {
@@ -55,6 +71,12 @@ async fn main() {
     };
 
     match args.subcommand {
+        SubCommands::AddPeer { ip } => {
+            let _ = post_api_command(APICommand::AddPeer(ip)).await;
+        }
+        SubCommands::Proof { data } => {
+            let _ = post_api_command(APICommand::Proof(data)).await;
+        }
         SubCommands::State => {
             let Ok(json_str) = serde_json::to_string(&state) else {
                 return;
@@ -79,9 +101,6 @@ async fn main() {
             };
             print!("{}", json_str);
         }
-        SubCommands::Proof { data } => {
-            let _ = post_api_command(APICommand::Proof(data)).await;
-        }
         SubCommands::Find { der } => {
             if let Some(proof) = state.proof_pool.find_by_sk(&SK { der }) {
                 let Ok(json_str) = serde_json::to_string(&proof) else {
@@ -99,6 +118,17 @@ async fn main() {
             } else {
                 print!("Invalid proof string");
             }
+        }
+        SubCommands::Compare { der1, der2 } => {
+            let Ok(result) = compare_proof(SKPair {
+                sk1: SK { der: der1 },
+                sk2: SK { der: der2 },
+            })
+            .await
+            else {
+                return;
+            };
+            print!("{:?}", result);
         }
     }
 }
