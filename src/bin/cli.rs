@@ -13,6 +13,7 @@ enum SubCommands {
     State,
     Address,
     Pool,
+    Peers,
     Proof { data: String },
 }
 
@@ -59,6 +60,12 @@ async fn main() {
         }
         SubCommands::Pool => {
             let Ok(json_str) = serde_json::to_string(&state.proof_pool) else {
+                return;
+            };
+            println!("{}", json_str);
+        }
+        SubCommands::Peers => {
+            let Ok(json_str) = serde_json::to_string(&state.peers) else {
                 return;
             };
             println!("{}", json_str);
