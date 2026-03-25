@@ -38,6 +38,16 @@ A proof is a collection of stamps.
 - Combines multiple independent stamps
 - Does not rely on any single node
 
+## Network
+The network operates as follows:
+1. A node creates a Proof request
+2. The request is broadcast to the network
+3. Nodes generate Stamps for the Proof
+4. Stamps are collected and aggregated
+5. Once a threshold is reached:
+6. The Proof is finalized
+7. It is broadcast to the network
+
 ## Why proof enables the ordering
 Individual stamps are insufficient:
 - They are local
