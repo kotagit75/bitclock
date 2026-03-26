@@ -48,7 +48,7 @@ The network operates as follows:
 6. The Proof is finalized
 7. It is broadcast to the network
 
-## Why proof enables the ordering
+## Why proof enables the ordering?
 Individual stamps are insufficient:
 - They are local
 - Using stamps does not allow one to assert legitimacy to nodes that joined later
