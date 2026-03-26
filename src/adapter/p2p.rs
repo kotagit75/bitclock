@@ -10,6 +10,8 @@ use crate::model::{
     p2p::{P2P_PORT, P2PMessage},
 };
 
+use crate::model::client::Client;
+
 pub async fn init_p2p(tx: Sender<Event>) {
     let app = Router::new()
         .route("/", post(handle_message))
@@ -27,4 +29,17 @@ async fn handle_message(
 ) -> &'static str {
     let _ = tx.send(Event::P2PRequest(message)).await;
     ""
+}
+
+impl Client {
+    fn get_url(&self) -> String {
+        format!("http://{}:{}", self.ip_addr, P2P_PORT)
+    }
+    pub async fn write(&self, message: &P2PMessage) {
+        let _ = reqwest::Client::new()
+            .post(self.get_url())
+            .json(message)
+            .send()
+            .await;
+    }
 }
