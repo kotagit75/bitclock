@@ -32,6 +32,7 @@ Instead, each node maintains a counter that serves as its local time, and the ti
 
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
+- Tutorial - [tutorial](docs/tutorial.md)
 
 ## :rocket: Getting Started
 ### Installation
@@ -46,7 +47,7 @@ $ cd bitclock
 $ cargo build --release
 ```
 
-### Usage
+### Usage([see tutorial](docs/tutorial.md))
 ```bash
 # run
 $ ./target/release/bitclock bitclock
