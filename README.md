@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/icon.svg" width=200 height=200>
+    <img src="assets/icon.svg?v=1" width=200 height=200>
     <h1>BitClock</h1>
 </div>
 
