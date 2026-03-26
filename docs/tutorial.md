@@ -32,6 +32,16 @@ ProofPool contains approved proofs.You can check the proof in ProofPool using th
 ./target/release/cli pool
 ```
 Initially, ProofPool will show that there is nothing there.
-```
+```json
 {"pool":[]}
 ```
+## 4. Create Proof
+Let's create a proof. You can assign any string to a proof. You can create a proof for the string "Hello world!" using the following command:
+```bash
+./target/release/cli proof "Hello world!"
+```
+If the proof is created successfully, a message will appear.
+```
+h9f2nb0fn034...(example)
+```
+This is the private key specific to this proof. It can be used to identify the proof created.
