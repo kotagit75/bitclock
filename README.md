@@ -56,10 +56,10 @@ $ ./target/release/bitclock bitclock
 $ curl http://localhost:8080/status
 
 # add peer
-$ ./target/release/cli addpeer "[peer_ip]"
+$ ./target/release/cli addpeer '[peer_ip]'
 
 # create proof
-$ ./target/release/cli proof "[data]"
+$ ./target/release/cli proof '[data]'
 
 # get state(address, secret_key, pool, peers)
 $ ./target/release/cli state
@@ -74,13 +74,13 @@ $ ./target/release/cli pool
 $ ./target/release/cli peers
 
 # find proof by secret key
-$ ./target/release/cli find "[secret_key]"
+$ ./target/release/cli find '[secret_key]'
 
 # verify proof
-$ ./target/release/cli verify "[proof]"
+$ ./target/release/cli verify '[proof]'
 
 # compare the issuance times of the two proofs
-$ ./target/release/cli compare "[secret_key1]" "[secret_key2]"
+$ ./target/release/cli compare '[secret_key1]' '[secret_key2]'
 
 # display help
 $ ./target/release/bitclock -h
