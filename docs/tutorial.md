@@ -61,10 +61,17 @@ If the following JSON data is output, the search was successful. The output JSON
 ## 5. Verify Proof
 If a friend gives you a proof, how can you verify that it is correct? If that proof exists in ProofPool, you’ll know it’s correct. The `verify` command checks the validity of the proof provided as an argument (i.e., whether it is included in the ProofPool).
 ```bash
-./target/release/cli verify "[proof]"
+./target/release/cli verify '[proof]'
 ```
 For example, let’s verify the proof we just created.
 ```bash
 ./target/release/cli verify '{"data":"Hello world!","stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":3,"time":1774513428556,"sign":[...]}'
 ```
 If the proof is correct, `true` will be displayed; if it is incorrect, `false` will be displayed.
+
+## 6.Compare Proof
+To compare which of the two proofs was created first, use the `compare` command.
+```bash
+./target/release/cli compare '[secret_key1]' '[secret_key2]'
+```
+If the first proof in the arguments was created first, `Less` is displayed; if the first proof in the arguments was created later, `Greater` is displayed.
