@@ -44,7 +44,7 @@ Let's create a proof. You can assign any string to a proof. You can create a pro
 ```
 If the proof is created successfully, a message will appear.
 ```
-h9f2nb0fn034...(example)
+000000000000000...(example)
 ```
 This is the private key specific to this proof. It can be used to identify the proof created.
 
