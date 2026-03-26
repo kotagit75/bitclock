@@ -1,9 +1,11 @@
+use std::process::exit;
+
 use crate::{boot::boot, effect::loop_effect_run, update::update};
 
 pub async fn start(level: log::Level) {
     simple_logger::init_with_level(level).unwrap();
-    let Ok((mut state, (mut event_rx, state_tx))) = boot(8080).await else {
-        return;
+    let Ok((mut state, (mut event_rx, state_tx))) = boot().await else {
+        exit(1);
     };
     while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
         debug!("Event received: {:?}", event);

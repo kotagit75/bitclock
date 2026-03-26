@@ -7,9 +7,7 @@ use crate::{
     util::status::get_status,
 };
 
-pub async fn boot(
-    api_port: u32,
-) -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
+pub async fn boot() -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<State>)), ()> {
     info!("BitClock is booting up");
     info!("{:?}", get_status());
     let Ok(key_pair) = load_key().await else {
@@ -20,5 +18,5 @@ pub async fn boot(
         error!("Failed to create state");
         return Err(());
     };
-    Ok((state.clone(), init_adapter(state, api_port)))
+    Ok((state.clone(), init_adapter(state)))
 }

@@ -20,11 +20,8 @@ use crate::{
     },
 };
 
-pub async fn init_api(
-    tx: Sender<Event>,
-    state_rx: Receiver<crate::model::state::State>,
-    api_port: u32,
-) {
+const API_PORT: u32 = 8080;
+pub async fn init_api(tx: Sender<Event>, state_rx: Receiver<crate::model::state::State>) {
     let app = Router::new()
         .route("/", post(handle_command))
         .route("/query", get(handle_query))
@@ -35,10 +32,10 @@ pub async fn init_api(
         .route("/query/compare", get(handle_query_compare_time))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
-    let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", api_port))
+    let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", API_PORT))
         .await
         .unwrap();
-    info!("API server is running on http://localhost:{}", api_port);
+    info!("API server is running on http://localhost:{}", API_PORT);
     axum::serve(listener, app).await.unwrap();
 }
 
