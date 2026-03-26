@@ -7,7 +7,7 @@ pub async fn start(level: log::Level) {
     let Ok((mut state, (mut event_rx, state_tx))) = boot().await else {
         exit(1);
     };
-    while let Some((new_state, effect)) = event_rx.recv().await.and_then(|event| {
+    while let Some((new_state, effects)) = event_rx.recv().await.and_then(|event| {
         debug!("Event received: {:?}", event);
         Some(update(
             state.clone(),
@@ -17,7 +17,9 @@ pub async fn start(level: log::Level) {
     }) {
         state = new_state.clone();
         let _ = state_tx.send(state.clone());
-        let state_clone = state.clone();
-        tokio::spawn(async move { loop_effect_run(state_clone, effect).await });
+        for effect in effects {
+            let state_clone = state.clone();
+            tokio::spawn(async move { loop_effect_run(state_clone, effect).await });
+        }
     }
 }

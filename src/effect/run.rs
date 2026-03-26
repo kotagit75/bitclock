@@ -5,7 +5,6 @@ use crate::{
 
 pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
     match effect {
-        Effect::None => {}
         Effect::CreateStamp(pk, difficulty) => {
             let address = state.address;
             let count = state.count + 1;
@@ -27,6 +26,9 @@ pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
         }
         Effect::Broadcast(message) => {
             broadcast(state.peers, message).await;
+        }
+        Effect::APIResponce(tx, res) => {
+            let _ = tx.send(res).await;
         }
     }
     None

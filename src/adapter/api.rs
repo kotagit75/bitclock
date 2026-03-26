@@ -4,13 +4,16 @@ use axum::{
     response,
     routing::{get, post},
 };
-use tokio::sync::{mpsc::Sender, watch::Receiver};
+use tokio::sync::{
+    mpsc::{self, Sender},
+    watch::Receiver,
+};
 
 use crate::{
     core::proof::compare_time,
     model::{
         address::Address,
-        api::{APICommand, ApiOrdering, SKPair},
+        api::{APICommand, APIResponse, ApiOrdering, SKPair},
         event::Event,
         proof::{Proof, ProofPool},
     },
@@ -42,9 +45,11 @@ pub async fn init_api(tx: Sender<Event>, state_rx: Receiver<crate::model::state:
 async fn handle_command(
     State((tx, _)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
     extract::Json(message): extract::Json<APICommand>,
-) -> &'static str {
-    let _ = tx.send(Event::APIRequest(message)).await;
-    ""
+) -> response::Json<APIResponse> {
+    let (responce_tx, mut responce_rx): (mpsc::Sender<APIResponse>, mpsc::Receiver<APIResponse>) =
+        mpsc::channel(100);
+    let _ = tx.send(Event::APIRequest(message, responce_tx)).await;
+    response::Json(responce_rx.recv().await.unwrap())
 }
 
 async fn handle_query(

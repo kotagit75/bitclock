@@ -11,6 +11,12 @@ pub enum APICommand {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum APIResponse {
+    AddPeer,
+    Proof(Result<SK, ()>),
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ApiOrdering {
     Less,
     Equal,
