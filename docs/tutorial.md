@@ -69,7 +69,7 @@ For example, let’s verify the proof we just created.
 ```
 If the proof is correct, `true` will be displayed; if it is incorrect, `false` will be displayed.
 
-## 6.Compare Proof
+## 6. Compare Proof
 To compare which of the two proofs was created first, use the `compare` command.
 ```bash
 ./target/release/cli compare '[secret_key1]' '[secret_key2]'
