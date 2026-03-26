@@ -1,6 +1,6 @@
 use bitclock::{
     model::{
-        api::{APICommand, ApiOrdering, SKPair},
+        api::{APICommand, APIResponse, ApiOrdering, SKPair},
         proof::Proof,
         state::State,
     },
@@ -54,13 +54,14 @@ async fn compare_proof(keys: SKPair) -> Result<ApiOrdering, reqwest::Error> {
     response.json::<ApiOrdering>().await
 }
 
-async fn post_api_command(command: APICommand) {
+async fn post_api_command(command: APICommand) -> Result<APIResponse, reqwest::Error> {
     let client = Client::new();
-    let _ = client
+    let response = client
         .post("http://localhost:8080/")
         .json(&command)
         .send()
-        .await;
+        .await?;
+    response.json::<APIResponse>().await
 }
 
 #[tokio::main]
@@ -75,7 +76,12 @@ async fn main() {
             let _ = post_api_command(APICommand::AddPeer(ip)).await;
         }
         SubCommands::Proof { data } => {
-            let _ = post_api_command(APICommand::Proof(data)).await;
+            let Ok(res) = post_api_command(APICommand::Proof(data)).await else {
+                return;
+            };
+            if let APIResponse::Proof(Ok(sk)) = res {
+                print!("{}", sk.der);
+            }
         }
         SubCommands::State => {
             let Ok(json_str) = serde_json::to_string(&state) else {
