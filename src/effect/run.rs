@@ -5,10 +5,9 @@ use crate::{
 
 pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
     match effect {
-        Effect::CreateStamp(pk, difficulty) => {
+        Effect::CreateStamp(pk, difficulty, id) => {
             let address = state.address;
             let count = state.count + 1;
-            let id = 0;
             let nonce = calc_nonce(difficulty, &address, count, &pk, id);
             if let Ok(sign) =
                 create_sign_to_stamp(state.node_sk, &address, count, pk.clone(), nonce, id)

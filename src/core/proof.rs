@@ -119,7 +119,7 @@ pub fn create_sign_to_proof(
 }
 
 pub fn calc_number_of_stamps() -> usize {
-    1
+    2
 }
 
 pub fn is_valid_proof(proof: Proof) -> bool {

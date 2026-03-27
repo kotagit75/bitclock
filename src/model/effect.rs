@@ -5,9 +5,9 @@ use crate::{
     util::key::PK,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Effect {
-    CreateStamp(PK, usize /*difficulty */),
+    CreateStamp(PK, usize /*difficulty */, usize /*id */),
     Broadcast(P2PMessage),
     APIResponce(Sender<APIResponse>, APIResponse),
 }

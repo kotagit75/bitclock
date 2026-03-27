@@ -1,3 +1,4 @@
+use crate::core::proof::calc_number_of_stamps;
 use crate::model::api::{APICommand, APIResponse};
 use crate::model::p2p::P2PMessage;
 use crate::model::proof::UnSignedProof;
@@ -6,7 +7,11 @@ use crate::model::{effect::Effect, event::Event, state::State};
 pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
     match event {
         Event::P2PRequest(P2PMessage::RequestStamp(pk, difficulty)) => {
-            (state, vec![Effect::CreateStamp(pk, difficulty)])
+            let effects = (0..calc_number_of_stamps())
+                .map(|x| Effect::CreateStamp(pk.clone(), difficulty, x))
+                .collect::<Vec<_>>();
+            debug!("{:?}", effects);
+            (state, effects)
         }
         Event::P2PRequest(P2PMessage::ResponceStamp(pk, stamp)) => {
             let state = state.add_to_stamp_pool(stamp);
