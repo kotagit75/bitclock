@@ -75,3 +75,13 @@ To compare which of the two proofs was created first, use the `compare` command.
 ./target/release/cli compare '[secret_key1]' '[secret_key2]'
 ```
 If the first proof in the arguments was created first, `Less` is displayed; if the first proof in the arguments was created later, `Greater` is displayed.
+
+## 6. Add Peer
+By joining a P2P network, you can share proofs with other nodes or have other nodes generate stamps for you. The `addpeer` command adds the IP address specified as an argument to the peer list.
+```bash
+./target/release/cli addpeer '[peer_ip_address]'
+```
+You can retrieve the IP address of a peer registered using the `peers` command.
+```bash
+./target/release/cli peers
+```
