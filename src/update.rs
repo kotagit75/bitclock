@@ -10,7 +10,6 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
             let effects = (0..calc_number_of_stamps())
                 .map(|x| Effect::CreateStamp(pk.clone(), difficulty, x))
                 .collect::<Vec<_>>();
-            debug!("{:?}", effects);
             (state, effects)
         }
         Event::P2PRequest(P2PMessage::ResponceStamp(pk, stamp)) => {
