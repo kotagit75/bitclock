@@ -56,7 +56,7 @@ $ ./target/release/bitclock bitclock
 $ curl http://localhost:8080/status
 
 # add peer
-$ ./target/release/cli addpeer '[peer_ip]'
+$ ./target/release/cli addpeer '[peer_ip_address]'
 
 # create proof
 $ ./target/release/cli proof '[data]'
