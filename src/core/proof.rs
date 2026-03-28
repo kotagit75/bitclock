@@ -7,6 +7,7 @@ use openssl::sign::{Signer, Verifier};
 use crate::core::stamp::sum_of_count;
 use crate::core::stamp::{is_same_stamps, is_valid_stamp};
 use crate::model::address::Address;
+use crate::model::data::Data;
 use crate::model::proof::{Proof, ProofPool, UnSignedProof};
 use crate::model::signature::Signature;
 use crate::model::stamp::Stamp;
@@ -59,14 +60,14 @@ impl Proof {
 }
 
 fn proof_to_buf_for_sign(
-    data: String,
+    data: Data,
     stamps: Vec<Stamp>,
     sk: SK,
     address: Address,
     difficulty: usize,
     time: i64,
 ) -> Result<Vec<u8>, ()> {
-    let data_buf = data.as_bytes().to_vec();
+    let data_buf = data.to_string().as_bytes().to_vec();
     let stamp_buf = {
         let stamp_bufs: Vec<Vec<u8>> = stamps
             .iter()
@@ -96,7 +97,7 @@ fn proof_to_buf_for_sign(
 }
 pub fn create_sign_to_proof(
     node_sk: SK,
-    data: String,
+    data: Data,
     stamps: Vec<Stamp>,
     sk: SK,
     address: Address,
@@ -170,7 +171,7 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
 }
 
 impl UnSignedProof {
-    pub fn new(data: String, sk: SK, address: Address, difficulty: usize, time: i64) -> Self {
+    pub fn new(data: Data, sk: SK, address: Address, difficulty: usize, time: i64) -> Self {
         Proof {
             data,
             stamps: Vec::new(),
@@ -182,7 +183,7 @@ impl UnSignedProof {
         }
     }
     pub fn create(
-        data: String,
+        data: Data,
         address: Address,
         time: i64,
         proof_pool: &ProofPool,
