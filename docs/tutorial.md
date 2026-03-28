@@ -38,9 +38,13 @@ Initially, ProofPool will show that there is nothing there.
 ```
 
 ## 4. Create Proof
-Let's create a proof. You can assign any string to a proof. You can create a proof for the string "Hello world!" using the following command:
+Let's create a proof. You can register any recipient and credential in a proof. For example, let’s create a proof with your own address as the recipient and “Hello world!” as the credential. You can retrieve your own address using the `./target/release/cli address` command.
 ```bash
-./target/release/cli proof 'Hello world!'
+./target/release/cli address
+# [display your own address]
+```
+```bash
+./target/release/cli proof '[your_own_address]' 'Hello world!'
 ```
 If the proof is created successfully, a message will appear.
 ```
