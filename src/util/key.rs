@@ -4,18 +4,9 @@ use openssl::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize, Eq, Hash)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct PK {
     pub der: String,
-}
-impl PartialEq for PK {
-    fn eq(&self, other: &Self) -> bool {
-        self.der == other.der
-    }
-
-    fn ne(&self, other: &Self) -> bool {
-        !self.eq(other)
-    }
 }
 impl PK {
     pub fn new(pk: PKey<Public>) -> Self {
@@ -28,18 +19,9 @@ impl PK {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Hash, Eq)]
+#[derive(Clone, Debug, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct SK {
     pub der: String,
-}
-impl PartialEq for SK {
-    fn eq(&self, other: &Self) -> bool {
-        self.der == other.der
-    }
-
-    fn ne(&self, other: &Self) -> bool {
-        !self.eq(other)
-    }
 }
 impl SK {
     pub fn new(sk: PKey<Private>) -> Self {
