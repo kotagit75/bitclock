@@ -5,6 +5,7 @@ use crate::{
 };
 
 impl Data {
+    #[allow(dead_code)]
     pub fn new(
         node_sk: SK,
         recipient: Address,
