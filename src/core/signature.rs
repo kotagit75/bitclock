@@ -32,5 +32,8 @@ pub fn verify(data: &[u8], pk: PK, signature: Signature) -> Result<(), ()> {
     let Ok(result) = verifyer.verify(&signature) else {
         return Err(());
     };
-    Ok(())
+    match result {
+        true => Ok(()),
+        false => Err(()),
+    }
 }
