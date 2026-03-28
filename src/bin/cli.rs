@@ -94,10 +94,13 @@ async fn main() {
             credential,
         } => {
             let recipient = Address { der: recipient_der };
-            let data = Data {
+            let Ok(data) = Data::new(
+                state.node_sk.clone(),
                 recipient,
-                issuer: state.address.clone(),
+                state.address.clone(),
                 credential,
+            ) else {
+                return;
             };
             let Ok(res) = post_api_command(APICommand::Proof(data)).await else {
                 return;
