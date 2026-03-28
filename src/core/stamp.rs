@@ -1,7 +1,3 @@
-use openssl::{
-    hash::MessageDigest,
-    sign::{Signer, Verifier},
-};
 use sha2::Digest;
 
 use crate::{
