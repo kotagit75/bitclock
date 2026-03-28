@@ -7,6 +7,8 @@ BitClock is a ledger-free distributed timestamp system. It allows timestamps to 
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
 ![Rust](https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white)
+![test status]
+(https://github.com/kotagit75/bitclock/actions/workflows/test.yaml/badge.svg)
 
 > [!NOTE]
 > BitClock is currently in active development. The API and features may change without notice.
