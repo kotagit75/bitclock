@@ -59,7 +59,7 @@ Let’s take a look at the proof we created in the previous chapter. If you run 
 ```
 If the following JSON data is output, the search was successful. The output JSON contains data regarding the proof that was created.
 ```json
-{"data":"Hello world!","stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":3,"time":1774513428556,"sign":[...]}
+{"data":{..., "credential": "Hello world!"},"stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":...,"time":1774513428556,"sign":[...]}
 ```
 
 ## 5. Verify Proof
