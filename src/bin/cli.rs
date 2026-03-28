@@ -116,10 +116,7 @@ async fn main() {
             print!("{}", json_str);
         }
         SubCommands::Address => {
-            let Ok(json_str) = serde_json::to_string(&state.address) else {
-                return;
-            };
-            print!("{}", json_str);
+            print!("{}", state.address.der);
         }
         SubCommands::Pool => {
             let Ok(json_str) = serde_json::to_string(&state.proof_pool) else {
