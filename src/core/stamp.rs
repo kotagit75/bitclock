@@ -5,6 +5,7 @@ use openssl::{
 use sha2::Digest;
 
 use crate::{
+    core::signature::{sign, verify},
     model::{address::Address, signature::Signature, stamp::Stamp},
     util::key::{PK, SK},
 };
@@ -21,20 +22,13 @@ impl Stamp {
     }
 
     pub fn verify_sign(&self) -> bool {
-        let key = self.address.key();
-        let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
-            return false;
-        };
-        let Ok(_) = self
+        match self
             .to_buf_for_sign()
-            .and_then(|buf| Ok(verifyer.update(&buf)))
-        else {
-            return false;
-        };
-        let Ok(result) = verifyer.verify(&self.sign) else {
-            return false;
-        };
-        result
+            .and_then(|buf| Ok(verify(&buf, self.address.clone(), self.sign.clone())))
+        {
+            Ok(_) => true,
+            Err(_) => false,
+        }
     }
 }
 fn stamp_to_buf_for_sign(
@@ -100,18 +94,11 @@ pub fn create_sign_to_stamp(
     nonce: u32,
     id: usize,
 ) -> Result<Signature, ()> {
-    let Ok(mut signer) = Signer::new(MessageDigest::sha256(), &node_sk.key()) else {
-        return Err(());
-    };
-    let Ok(_) = stamp_to_buf_for_sign(address, count, &pk, nonce, id)
-        .and_then(|buf| Ok(signer.update(&buf)))
-    else {
-        return Err(());
-    };
-    let Ok(sign) = signer.sign_to_vec() else {
-        return Err(());
-    };
-    Ok(sign)
+    match stamp_to_buf_for_sign(address, count, &pk, nonce, id).and_then(|buf| sign(&buf, node_sk))
+    {
+        Ok(sign) => Ok(sign),
+        Err(_) => Err(()),
+    }
 }
 
 fn nonce_start_with_str(difficulty: usize) -> String {
