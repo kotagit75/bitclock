@@ -1,6 +1,8 @@
 use bitclock::{
     model::{
+        address::Address,
         api::{APICommand, APIResponse, ApiOrdering, SKPair},
+        data::Data,
         proof::Proof,
         state::State,
     },
@@ -17,15 +19,27 @@ struct Args {
 
 #[derive(Debug, Subcommand)]
 enum SubCommands {
-    AddPeer { ip: String },
-    Proof { data: String },
+    AddPeer {
+        ip: String,
+    },
+    Proof {
+        recipient_der: String,
+        credential: String,
+    },
     State,
     Address,
     Pool,
     Peers,
-    Find { der: String },
-    Verify { proof_str: String },
-    Compare { der1: String, der2: String },
+    Find {
+        der: String,
+    },
+    Verify {
+        proof_str: String,
+    },
+    Compare {
+        der1: String,
+        der2: String,
+    },
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -75,7 +89,16 @@ async fn main() {
         SubCommands::AddPeer { ip } => {
             let _ = post_api_command(APICommand::AddPeer(ip)).await;
         }
-        SubCommands::Proof { data } => {
+        SubCommands::Proof {
+            recipient_der,
+            credential,
+        } => {
+            let recipient = Address { der: recipient_der };
+            let data = Data {
+                recipient,
+                issuer: state.address.clone(),
+                credential,
+            };
             let Ok(res) = post_api_command(APICommand::Proof(data)).await else {
                 return;
             };
