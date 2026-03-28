@@ -2,12 +2,12 @@ use std::cmp::Ordering;
 
 use serde::{Deserialize, Serialize};
 
-use crate::util::key::SK;
+use crate::{model::data::Data, util::key::SK};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum APICommand {
     AddPeer(String /*ip */),
-    Proof(String /*data */),
+    Proof(Data /*data */),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
