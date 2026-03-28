@@ -69,3 +69,60 @@ pub fn create_sign_to_data(
         Err(_) => Err(()),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::util::key::generate_pk_and_sk;
+
+    use super::*;
+
+    #[test]
+    fn test_create_sign_to_data() {
+        let (recipient, node_sk) = generate_pk_and_sk(512).unwrap();
+        let (issuer, _) = generate_pk_and_sk(512).unwrap();
+        let credential = "test".to_string();
+        let Ok(signature) =
+            create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
+        else {
+            assert!(false);
+            return;
+        };
+        assert!(
+            sign(
+                &data_to_buf_for_sign(&recipient, &issuer, credential).unwrap(),
+                node_sk
+            )
+            .unwrap()
+                == signature
+        );
+    }
+
+    #[test]
+    fn test_verify_sign() {
+        let (recipient, node_sk) = generate_pk_and_sk(512).unwrap();
+        let (issuer, _) = generate_pk_and_sk(512).unwrap();
+        let credential = "test".to_string();
+        let data = Data::new(
+            node_sk.clone(),
+            recipient.clone(),
+            issuer.clone(),
+            credential.clone(),
+        )
+        .unwrap();
+        let Ok(signature) =
+            create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
+        else {
+            assert!(false);
+            return;
+        };
+        assert!(
+            verify(
+                &data_to_buf_for_sign(&recipient, &issuer, credential).unwrap(),
+                recipient,
+                signature
+            )
+            .is_ok()
+                == data.verify_sign()
+        );
+    }
+}
