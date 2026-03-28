@@ -59,7 +59,7 @@ $ curl http://localhost:8080/status
 $ ./target/release/cli addpeer '[peer_ip_address]'
 
 # create proof
-$ ./target/release/cli proof '[data]'
+$ ./target/release/cli proof '[recipient]' '[credential]'
 
 # get state(address, secret_key, pool, peers)
 $ ./target/release/cli state
