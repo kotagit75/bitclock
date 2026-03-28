@@ -1,4 +1,7 @@
-use openssl::{hash::MessageDigest, sign::Signer};
+use openssl::{
+    hash::MessageDigest,
+    sign::{Signer, Verifier},
+};
 
 use crate::{
     model::{address::Address, data::Data, signature::Signature},
@@ -28,6 +31,27 @@ impl Data {
             "{} {} {}",
             self.recipient.der, self.issuer.der, self.credential
         )
+    }
+
+    pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
+        data_to_buf_for_sign(&self.recipient, &self.issuer, self.credential.clone())
+    }
+
+    pub fn verify(&self) -> bool {
+        let key = self.recipient.key();
+        let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
+            return false;
+        };
+        let Ok(_) = self
+            .to_buf_for_sign()
+            .and_then(|buf| Ok(verifyer.update(&buf)))
+        else {
+            return false;
+        };
+        let Ok(result) = verifyer.verify(&self.sign) else {
+            return false;
+        };
+        result
     }
 }
 pub fn data_to_buf_for_sign(
