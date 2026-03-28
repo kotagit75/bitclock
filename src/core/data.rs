@@ -36,7 +36,7 @@ impl Data {
 
     pub fn verify_sign(&self) -> bool {
         self.to_buf_for_sign()
-            .and_then(|buf| Ok(verify(&buf, self.recipient.clone(), self.sign.clone())))
+            .map(|buf| verify(&buf, self.recipient.clone(), self.sign.clone()))
             .is_ok()
     }
 }
