@@ -1,9 +1,7 @@
 use std::cmp::{Ordering, max};
 use std::collections::HashSet;
 
-use openssl::hash::MessageDigest;
-use openssl::sign::{Signer, Verifier};
-
+use crate::core::signature::{sign, verify};
 use crate::core::stamp::sum_of_count;
 use crate::core::stamp::{is_same_stamps, is_valid_stamp};
 use crate::model::address::Address;
@@ -29,21 +27,13 @@ impl Proof {
     }
 
     pub fn verify_sign(&self) -> bool {
-        let Ok(buf) = self.to_buf_for_sign() else {
-            return false;
-        };
-
-        let key = self.address.key();
-        let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
-            return false;
-        };
-        let Ok(_) = verifyer.update(&buf) else {
-            return false;
-        };
-        let Ok(result) = verifyer.verify(&self.sign) else {
-            return false;
-        };
-        result
+        match self
+            .to_buf_for_sign()
+            .and_then(|buf| Ok(verify(&buf, self.address.clone(), self.sign.clone())))
+        {
+            Ok(_) => true,
+            Err(_) => false,
+        }
     }
 }
 impl Proof {
@@ -104,19 +94,12 @@ pub fn create_sign_to_proof(
     difficulty: usize,
     time: i64,
 ) -> Result<Signature, ()> {
-    let Ok(buf) = proof_to_buf_for_sign(data, stamps, sk, address, difficulty, time) else {
-        return Err(());
-    };
-    let Ok(mut signer) = Signer::new(MessageDigest::sha256(), &node_sk.key()) else {
-        return Err(());
-    };
-    let Ok(_) = signer.update(&buf) else {
-        return Err(());
-    };
-    let Ok(sign) = signer.sign_to_vec() else {
-        return Err(());
-    };
-    Ok(sign)
+    match proof_to_buf_for_sign(data, stamps, sk, address, difficulty, time)
+        .and_then(|buf| sign(&buf, node_sk))
+    {
+        Ok(sign) => Ok(sign),
+        Err(_) => Err(()),
+    }
 }
 
 pub fn calc_number_of_stamps() -> usize {
