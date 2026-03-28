@@ -34,13 +34,9 @@ impl Data {
     }
 
     pub fn verify_sign(&self) -> bool {
-        match self
-            .to_buf_for_sign()
+        self.to_buf_for_sign()
             .and_then(|buf| Ok(verify(&buf, self.recipient.clone(), self.sign.clone())))
-        {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+            .is_ok()
     }
 }
 pub fn data_to_buf_for_sign(
