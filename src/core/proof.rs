@@ -121,7 +121,7 @@ pub fn is_valid_proof(proof: Proof) -> bool {
             .dedup_by(|stamp1: &mut Stamp, stamp2: &mut Stamp| is_same_stamps(stamp1, stamp2));
         dedup_stamps.len() == proof.stamps.len()
     };
-    let is_valid_data_sign = proof.data.verify();
+    let is_valid_data_sign = proof.data.verify_stamp();
     let is_valid_sign = proof.verify_sign();
     is_valid_stamps
         && is_valid_number_of_stamps

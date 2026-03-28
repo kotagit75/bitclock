@@ -37,7 +37,7 @@ impl Data {
         data_to_buf_for_sign(&self.recipient, &self.issuer, self.credential.clone())
     }
 
-    pub fn verify(&self) -> bool {
+    pub fn verify_sign(&self) -> bool {
         let key = self.recipient.key();
         let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
             return false;
