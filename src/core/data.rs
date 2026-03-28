@@ -1,9 +1,5 @@
-use openssl::{
-    hash::MessageDigest,
-    sign::{Signer, Verifier},
-};
-
 use crate::{
+    core::signature::{sign, verify},
     model::{address::Address, data::Data, signature::Signature},
     util::key::SK,
 };
@@ -38,20 +34,13 @@ impl Data {
     }
 
     pub fn verify_sign(&self) -> bool {
-        let key = self.recipient.key();
-        let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
-            return false;
-        };
-        let Ok(_) = self
+        match self
             .to_buf_for_sign()
-            .and_then(|buf| Ok(verifyer.update(&buf)))
-        else {
-            return false;
-        };
-        let Ok(result) = verifyer.verify(&self.sign) else {
-            return false;
-        };
-        result
+            .and_then(|buf| Ok(verify(&buf, self.recipient.clone(), self.sign.clone())))
+        {
+            Ok(_) => true,
+            Err(_) => false,
+        }
     }
 }
 pub fn data_to_buf_for_sign(
@@ -75,16 +64,8 @@ pub fn create_sign_to_data(
     issuer: &Address,
     credential: String,
 ) -> Result<Signature, ()> {
-    let Ok(mut signer) = Signer::new(MessageDigest::sha256(), &node_sk.key()) else {
-        return Err(());
-    };
-    let Ok(_) =
-        data_to_buf_for_sign(recipient, issuer, credential).and_then(|buf| Ok(signer.update(&buf)))
-    else {
-        return Err(());
-    };
-    let Ok(sign) = signer.sign_to_vec() else {
-        return Err(());
-    };
-    Ok(sign)
+    match data_to_buf_for_sign(recipient, issuer, credential).and_then(|buf| sign(&buf, node_sk)) {
+        Ok(sign) => Ok(sign),
+        Err(_) => Err(()),
+    }
 }
