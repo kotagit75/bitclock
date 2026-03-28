@@ -39,7 +39,7 @@ impl State {
             proof_pool: self.proof_pool.clone(),
             stamp_pool: self.stamp_pool.clone(),
             un_signed_proof_pool: self.un_signed_proof_pool.clone(),
-            count: count,
+            count,
             node_sk: self.node_sk.clone(),
             address: self.address.clone(),
             peers: self.peers.clone(),
