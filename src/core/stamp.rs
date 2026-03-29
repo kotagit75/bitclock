@@ -53,7 +53,7 @@ fn stamp_to_buf_for_nonce(
         return Err(());
     };
     let nonce_buf = nonce.to_be_bytes();
-    Ok(vec![memo, nonce_buf.to_vec()].concat())
+    Ok([memo, nonce_buf.to_vec()].concat())
 }
 fn stamp_to_buf_for_nonce_memo(
     address: &Address,
