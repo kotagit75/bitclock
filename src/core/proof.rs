@@ -295,7 +295,7 @@ impl ProofPool {
             proof_pool = new_proof_pool;
         }
         let diff: HashSet<Proof> = self.pool.difference(&new_pool.pool).cloned().collect();
-        if added || diff.len() > 0 {
+        if added || !diff.is_empty() {
             return (true, proof_pool, count);
         }
         (false, proof_pool, count)
