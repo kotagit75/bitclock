@@ -33,7 +33,7 @@ fn stamp_to_buf_for_sign(
     };
     let nonce_buf = nonce.to_be_bytes();
     let id_buf = id.to_be_bytes();
-    Ok(vec![
+    Ok([
         address_buf,
         count_buf.to_vec(),
         pk_buf,
