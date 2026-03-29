@@ -6,11 +6,8 @@ fn get_clamped<T: Clone>(arr: Vec<T>, index: usize) -> T {
 impl ProofPool {
     fn calc_actual_time(&self, end_time: i64) -> Option<i64> {
         let sorted_times = self.sort_pool_to_time();
-        let Some(lastest_index_before_end_time) =
-            sorted_times.iter().position(|time| time.clone() < end_time)
-        else {
-            return None;
-        };
+        let lastest_index_before_end_time =
+            sorted_times.iter().position(|time| *time < end_time)?;
         let start_time = get_clamped(sorted_times, lastest_index_before_end_time);
         Some(end_time - start_time)
     }
