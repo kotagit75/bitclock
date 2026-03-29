@@ -99,9 +99,8 @@ pub fn verify_nonce(
     id: usize,
 ) -> bool {
     stamp_to_buf_for_nonce(address, count, pk, nonce, id)
-        .and_then(|buf| {
-            Ok(hex::encode(sha2::Sha256::digest(buf))
-                .starts_with(&nonce_start_with_str(difficulty)))
+        .map(|buf| {
+            hex::encode(sha2::Sha256::digest(buf)).starts_with(&nonce_start_with_str(difficulty))
         })
         .is_ok()
 }
