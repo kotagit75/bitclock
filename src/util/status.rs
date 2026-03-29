@@ -17,6 +17,6 @@ pub fn get_status() -> SystemStatus {
     let pid = Pid::from_u32(std::process::id());
     SystemStatus {
         status: SystemStatusType::Running,
-        memory_usage_bytes: sys.process(pid).and_then(|process| Some(process.memory())),
+        memory_usage_bytes: sys.process(pid).map(|process| process.memory()),
     }
 }
