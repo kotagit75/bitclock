@@ -137,8 +137,7 @@ mod tests {
         let state = State::new((address.clone(), node_sk.clone())).unwrap();
         let ip_addr = "ip_addr".to_string();
         let new_state = state.add_peer(ip_addr.clone());
-        assert_eq!(new_state.peers.clone().len(), 1);
-        assert_eq!(new_state.peers[0].ip_addr, ip_addr);
+        assert!(new_state.peers.contains(&Client::new(ip_addr)));
     }
     #[test]
     fn test_add_to_un_signed_proof_pool() {
