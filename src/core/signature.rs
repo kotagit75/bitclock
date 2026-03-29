@@ -26,7 +26,7 @@ pub fn verify(data: &[u8], pk: PK, signature: Signature) -> Result<(), ()> {
     let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
         return Err(());
     };
-    let Ok(_) = verifyer.update(&data) else {
+    let Ok(_) = verifyer.update(data) else {
         return Err(());
     };
     let Ok(result) = verifyer.verify(&signature) else {
