@@ -8,13 +8,7 @@ use crate::{
 
 impl Stamp {
     pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
-        stamp_to_buf_for_sign(
-            &self.address,
-            self.count.clone(),
-            &self.pk,
-            self.nonce.clone(),
-            self.id.clone(),
-        )
+        stamp_to_buf_for_sign(&self.address, self.count, &self.pk, self.nonce, self.id)
     }
 
     pub fn verify_sign(&self) -> bool {
