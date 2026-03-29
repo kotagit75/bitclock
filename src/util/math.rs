@@ -5,7 +5,7 @@ pub fn median(list: &[i64]) -> Option<i64> {
     if len == 0 {
         return None;
     }
-    if len % 2 == 0 {
+    if len.is_multiple_of(2) {
         let (a, b) = {
             let mid = len / 2;
             (mid, mid - 1)
