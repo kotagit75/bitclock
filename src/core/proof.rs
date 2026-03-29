@@ -226,8 +226,7 @@ impl ProofPool {
     pub fn get_lastest_stamp_of_address(&self, address: Address) -> Option<Stamp> {
         self.sort_pool()
             .iter()
-            .map(|proof| proof.find_stamp_has_address(address.clone()))
-            .flatten()
+            .filter_map(|proof| proof.find_stamp_has_address(address.clone()))
             .last()
     }
     pub fn get_lastest_count_of_address(&self, address: Address) -> u32 {
