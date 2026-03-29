@@ -1,5 +1,5 @@
-pub fn median(list: &Vec<i64>) -> Option<i64> {
-    let mut list = list.clone();
+pub fn median(list: &[i64]) -> Option<i64> {
+    let mut list = list.to_owned();
     let len = list.len();
     list.sort_unstable();
     if len == 0 {
