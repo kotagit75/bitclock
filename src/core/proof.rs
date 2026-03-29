@@ -245,7 +245,7 @@ impl ProofPool {
             let expected_count = self.get_lastest_count_of_address(address.clone()) + 1;
             find_counts_by_address(proof.clone(), address.clone())
                 .iter()
-                .all(|count| count.clone() == expected_count)
+                .all(|count| *count == expected_count)
         });
 
         let recent_time_median = median(
