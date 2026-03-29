@@ -4,7 +4,8 @@ use crate::{
     model::{
         address::Address,
         client::{Client, MY_IP_ADDR},
-        proof::{Proof, ProofPool, UnSignedProof},
+        proof::{Proof, UnSignedProof},
+        proofpool::ProofPool,
         stamp::Stamp,
         state::State,
     },

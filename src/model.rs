@@ -6,6 +6,7 @@ pub mod effect;
 pub mod event;
 pub mod p2p;
 pub mod proof;
+pub mod proofpool;
 pub mod signature;
 pub mod stamp;
 pub mod state;

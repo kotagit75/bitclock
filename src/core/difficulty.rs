@@ -1,4 +1,4 @@
-use crate::model::proof::ProofPool;
+use crate::model::proofpool::ProofPool;
 
 fn get_clamped<T: Clone>(arr: Vec<T>, index: usize) -> T {
     arr[std::cmp::min_by(index, arr.len() - 1, |a, b| a.cmp(b))].clone()

@@ -15,7 +15,8 @@ use crate::{
         address::Address,
         api::{APICommand, APIResponse, ApiOrdering, SKPair},
         event::Event,
-        proof::{Proof, ProofPool},
+        proof::Proof,
+        proofpool::ProofPool,
     },
     util::{
         key::SK,

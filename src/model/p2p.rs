@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    model::{proof::ProofPool, stamp::Stamp},
+    model::{proofpool::ProofPool, stamp::Stamp},
     util::key::PK,
 };
 
