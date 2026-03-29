@@ -81,8 +81,7 @@ mod tests {
         let Ok(signature) =
             create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
         else {
-            assert!(false);
-            return;
+            panic!();
         };
         assert!(
             sign(
@@ -109,8 +108,7 @@ mod tests {
         let Ok(signature) =
             create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
         else {
-            assert!(false);
-            return;
+            panic!();
         };
         assert!(
             verify(
