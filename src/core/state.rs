@@ -103,7 +103,7 @@ impl State {
         for stamp in self.stamp_pool.clone() {
             stamp_map
                 .entry(stamp.pk.clone())
-                .or_insert_with(|| Vec::new())
+                .or_insert_with(Vec::new)
                 .push(stamp);
         }
         stamp_map
