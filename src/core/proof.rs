@@ -253,7 +253,8 @@ impl ProofPool {
                 .get_lastest_proofs(11)
                 .iter()
                 .map(|proof| proof.time)
-                .collect(),
+                .collect::<Vec<i64>>()
+                .as_slice(),
         );
         let is_valid_time = match recent_time_median {
             Some(median) => proof.time > median,
