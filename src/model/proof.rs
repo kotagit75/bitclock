@@ -18,7 +18,7 @@ pub struct Proof {
     pub sign: Signature,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct ProofPool {
     pub pool: HashSet<Proof>,
 }

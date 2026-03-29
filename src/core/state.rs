@@ -14,7 +14,7 @@ use crate::{
 impl State {
     pub fn new((address, node_sk): (Address, SK)) -> Result<Self, ()> {
         Ok(State {
-            proof_pool: ProofPool::new(),
+            proof_pool: ProofPool::default(),
             stamp_pool: Vec::new(),
             un_signed_proof_pool: Vec::new(),
             count: 0,
