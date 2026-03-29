@@ -249,8 +249,7 @@ impl ProofPool {
         });
 
         let recent_time_median = median(
-            &self
-                .get_lastest_proofs(11)
+            self.get_lastest_proofs(11)
                 .iter()
                 .map(|proof| proof.time)
                 .collect::<Vec<i64>>()
