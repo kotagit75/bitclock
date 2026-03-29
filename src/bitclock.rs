@@ -7,13 +7,13 @@ pub async fn start(level: log::Level) {
     let Ok((mut state, (mut event_rx, state_tx))) = boot().await else {
         exit(1);
     };
-    while let Some((new_state, effects)) = event_rx.recv().await.and_then(|event| {
+    while let Some((new_state, effects)) = event_rx.recv().await.map(|event| {
         debug!("Event received: {:?}", event);
-        Some(update(
+        update(
             state.clone(),
             event,
             chrono::prelude::Utc::now().timestamp_millis(),
-        ))
+        )
     }) {
         state = new_state.clone();
         let _ = state_tx.send(state.clone());
