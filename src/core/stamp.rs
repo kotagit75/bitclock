@@ -105,10 +105,8 @@ pub fn verify_nonce(
         .is_ok()
 }
 pub fn verify_nonce_for_calc(memo: &[u8], nonce: u32, starts_with: &str) -> bool {
-    hex::encode(sha2::Sha256::digest(
-        vec![memo, &nonce.to_be_bytes()].concat(),
-    ))
-    .starts_with(starts_with)
+    hex::encode(sha2::Sha256::digest([memo, &nonce.to_be_bytes()].concat()))
+        .starts_with(starts_with)
 }
 
 pub fn calc_nonce(difficulty: usize, address: &Address, count: u32, pk: &PK, id: usize) -> u32 {
