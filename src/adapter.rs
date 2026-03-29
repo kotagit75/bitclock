@@ -25,5 +25,5 @@ pub fn init_adapter(state: State) -> (Receiver<Event>, watch::Sender<State>) {
     tokio::spawn(async move {
         init_api(tx_clone2, rx_clone).await;
     });
-    return (event_rx, state_tx);
+    (event_rx, state_tx)
 }
