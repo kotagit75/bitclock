@@ -52,7 +52,7 @@ pub fn data_to_buf_for_sign(
         return Err(());
     };
     let credential_buf = credential.as_bytes().to_vec();
-    Ok(vec![recipient_buf, issuer_buf, credential_buf].concat())
+    Ok([recipient_buf, issuer_buf, credential_buf].concat())
 }
 
 pub fn create_sign_to_data(
