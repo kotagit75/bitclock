@@ -124,3 +124,36 @@ impl State {
         self.un_signed_proof_pool_to_map().get(pk).cloned()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{model::data::Data, util::key::generate_pk_and_sk};
+
+    use super::*;
+
+    #[test]
+    fn test_add_peer() {
+        let (address, node_sk) = generate_pk_and_sk(512).unwrap();
+        let state = State::new((address.clone(), node_sk.clone())).unwrap();
+        let ip_addr = "ip_addr".to_string();
+        let new_state = state.add_peer(ip_addr.clone());
+        assert_eq!(new_state.peers.clone().len(), 1);
+        assert_eq!(new_state.peers[0].ip_addr, ip_addr);
+    }
+    #[test]
+    fn test_add_to_un_signed_proof_pool() {
+        let (address, node_sk) = generate_pk_and_sk(512).unwrap();
+        let data = Data::new(
+            node_sk.clone(),
+            address.clone(),
+            address.clone(),
+            "credential".to_string(),
+        )
+        .unwrap();
+        let state = State::new((address.clone(), node_sk.clone())).unwrap();
+        let un_signed_proof = UnSignedProof::new(data, node_sk, address.clone(), 0, 0);
+        let new_state = state.add_to_un_signed_proof_pool(un_signed_proof.clone());
+        assert_eq!(new_state.un_signed_proof_pool.clone().len(), 1);
+        assert_eq!(new_state.un_signed_proof_pool[0], un_signed_proof);
+    }
+}
