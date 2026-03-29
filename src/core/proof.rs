@@ -209,7 +209,7 @@ fn find_counts_by_address(proof: Proof, address: Address) -> Vec<u32> {
 
 impl ProofPool {
     pub fn sort_pool(&self) -> Vec<Proof> {
-        let mut vec_proof: Vec<Proof> = self.pool.iter().map(|p| p.clone()).collect();
+        let mut vec_proof: Vec<Proof> = self.pool.iter().cloned().collect();
         vec_proof.sort_by(|proof1, proof2| compare_time(proof1, proof2));
         vec_proof
     }
