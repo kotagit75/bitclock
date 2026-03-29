@@ -22,6 +22,6 @@ pub fn median(list: &[i64]) -> Option<i64> {
         let num = (len / 2) + 1;
         let mid = list.get(num);
 
-        mid.map(|a| *a)
+        mid.copied()
     }
 }
