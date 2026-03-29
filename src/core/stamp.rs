@@ -149,12 +149,3 @@ pub fn is_valid_stamp(stamp: &Stamp, difficulty: usize, proof_pk: PK) -> bool {
 pub fn sum_of_count(stamps: Vec<Stamp>) -> u32 {
     stamps.iter().map(|stamp| stamp.count).sum()
 }
-
-pub fn is_same_stamps(stamp1: &Stamp, stamp2: &Stamp) -> bool {
-    stamp1.address == stamp2.address
-        && stamp1.count == stamp2.count
-        && stamp1.pk == stamp2.pk
-        && stamp1.nonce == stamp2.nonce
-        && stamp1.id == stamp2.id
-        && stamp1.sign == stamp2.sign
-}

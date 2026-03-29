@@ -2,8 +2,8 @@ use std::cmp::{Ordering, max};
 use std::collections::HashSet;
 
 use crate::core::signature::{sign, verify};
+use crate::core::stamp::is_valid_stamp;
 use crate::core::stamp::sum_of_count;
-use crate::core::stamp::{is_same_stamps, is_valid_stamp};
 use crate::model::address::Address;
 use crate::model::data::Data;
 use crate::model::proof::{Proof, ProofPool, UnSignedProof};
@@ -117,8 +117,7 @@ pub fn is_valid_proof(proof: Proof) -> bool {
     let is_valid_number_of_stamps = proof.stamps.len() >= calc_number_of_stamps();
     let is_not_duplicated_stamps = {
         let mut dedup_stamps: Vec<Stamp> = proof.stamps.clone();
-        dedup_stamps
-            .dedup_by(|stamp1: &mut Stamp, stamp2: &mut Stamp| is_same_stamps(stamp1, stamp2));
+        dedup_stamps.dedup();
         dedup_stamps.len() == proof.stamps.len()
     };
     let is_valid_data_sign = proof.data.verify_sign();
