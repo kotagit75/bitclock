@@ -12,13 +12,9 @@ impl Stamp {
     }
 
     pub fn verify_sign(&self) -> bool {
-        match self
-            .to_buf_for_sign()
-            .and_then(|buf| Ok(verify(&buf, self.address.clone(), self.sign.clone())))
-        {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        self.to_buf_for_sign()
+            .map(|buf| verify(&buf, self.address.clone(), self.sign.clone()))
+            .is_ok()
     }
 }
 fn stamp_to_buf_for_sign(
