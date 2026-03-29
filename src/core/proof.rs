@@ -129,7 +129,7 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
     let proof1_addresses = proof1.stamps.iter().map(|stamp| stamp.address.clone());
     let proof2_addresses = proof2.stamps.iter().map(|stamp| stamp.address.clone());
     let proof1_duplicated_stamps: Vec<Stamp> = proof2_addresses
-        .map(|address| {
+        .filter_map(|address| {
             proof1
                 .stamps
                 .iter()
@@ -137,10 +137,9 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
                 .max_by_key(|stamp| stamp.count)
                 .cloned()
         })
-        .flatten()
         .collect();
     let proof2_duplicated_stamps: Vec<Stamp> = proof1_addresses
-        .map(|address| {
+        .filter_map(|address| {
             proof2
                 .stamps
                 .iter()
@@ -148,7 +147,6 @@ pub fn compare_time(proof1: &Proof, proof2: &Proof) -> Ordering {
                 .max_by_key(|stamp| stamp.count)
                 .cloned()
         })
-        .flatten()
         .collect();
     sum_of_count(proof1_duplicated_stamps).cmp(&sum_of_count(proof2_duplicated_stamps))
 }
