@@ -69,7 +69,7 @@ fn stamp_to_buf_for_nonce_memo(
         return Err(());
     };
     let id_buf = id.to_be_bytes();
-    Ok(vec![address_buf, count_buf.to_vec(), pk_buf, id_buf.to_vec()].concat())
+    Ok([address_buf, count_buf.to_vec(), pk_buf, id_buf.to_vec()].concat())
 }
 
 pub fn create_sign_to_stamp(
