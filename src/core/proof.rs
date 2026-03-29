@@ -71,7 +71,7 @@ fn proof_to_buf_for_sign(
     };
     let difficulty_buf = difficulty.to_be_bytes();
     let time_buf = time.to_be_bytes();
-    Ok(vec![
+    Ok([
         data_buf,
         stamp_buf,
         sk_buf,
