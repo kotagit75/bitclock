@@ -34,6 +34,7 @@ pub async fn init_api(tx: Sender<Event>, state_rx: Receiver<crate::model::state:
         .route("/query/find", get(handle_query_find_by_sk))
         .route("/query/verify", get(handle_query_verify))
         .route("/query/compare", get(handle_query_compare_time))
+        .route("/query/sort", get(handle_query_sorted_proofs))
         .route("/status", get(handle_status))
         .with_state((tx, state_rx));
     let listener = tokio::net::TcpListener::bind(format!("127.0.0.1:{}", API_PORT))
@@ -97,6 +98,12 @@ async fn handle_query_compare_time(
     };
     let ord = ApiOrdering::from(compare_time(&proof1, &proof2));
     response::Json(Some(ord))
+}
+
+async fn handle_query_sorted_proofs(
+    State((_, rx)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
+) -> response::Json<Vec<Proof>> {
+    response::Json(rx.borrow().proof_pool.sort_pool())
 }
 
 async fn handle_status(
