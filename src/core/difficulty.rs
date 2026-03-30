@@ -12,7 +12,7 @@ impl ProofPool {
         Some(end_time - start_time)
     }
     pub fn calc_difficulty(&self, end_time: i64) -> usize {
-        let base = 3;
+        let base = 4;
         let target_time = 1000 * 60 * 10; // targetTime should be bigger
         let pool = self.sort_pool();
         let Some(old_proof) = pool.iter().find(|proof| proof.time < end_time) else {
