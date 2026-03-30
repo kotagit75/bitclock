@@ -21,7 +21,7 @@ impl ProofPool {
         let Some(actual_time) = self.calc_actual_time(end_time) else {
             return old_proof.difficulty;
         };
-        let rate = (target_time as f64 / actual_time as f64).clamp(0.2, 1.8);
+        let rate = (target_time as f64 / actual_time as f64).clamp(0.7, 1.3);
         (old_proof.difficulty as f64 * rate).round() as usize
     }
 }
