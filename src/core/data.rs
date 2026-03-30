@@ -117,7 +117,7 @@ mod tests {
                 signature
             )
             .is_ok()
-                == data.verify_sign()
+                && data.verify_sign()
         );
     }
 }
