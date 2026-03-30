@@ -6,10 +6,11 @@ use bitclock::{
         proof::Proof,
         state::State,
     },
-    util::key::SK,
+    util::key::{PK, SK},
 };
 use clap::{Parser, Subcommand};
 use reqwest::Client;
+use serde::Serialize;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -41,6 +42,10 @@ enum SubCommands {
         der2: String,
     },
     Sort,
+    FindByPair {
+        der1: String,
+        der2: String,
+    },
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -77,6 +82,12 @@ async fn post_api_command(command: APICommand) -> Result<APIResponse, reqwest::E
         .send()
         .await?;
     response.json::<APIResponse>().await
+}
+
+#[derive(Serialize)]
+struct FindByPairResult {
+    pub is_first: bool,
+    pub content: String,
 }
 
 #[tokio::main]
@@ -162,6 +173,33 @@ async fn main() {
         }
         SubCommands::Sort => {
             let Ok(json_str) = serde_json::to_string(&state.proof_pool.sort_pool()) else {
+                return;
+            };
+            print!("{}", json_str);
+        }
+        SubCommands::FindByPair { der1, der2 } => {
+            let Ok(json_str) = serde_json::to_string(
+                &state
+                    .proof_pool
+                    .sort_pool()
+                    .iter()
+                    .map(|proof| {
+                        let pk1 = PK { der: der1.clone() };
+                        let pk2 = PK { der: der2.clone() };
+                        if proof.data.recipient != pk1 && proof.data.issuer != pk1 {
+                            return None;
+                        }
+                        if proof.data.recipient != pk2 && proof.data.issuer != pk2 {
+                            return None;
+                        }
+                        Some(FindByPairResult {
+                            is_first: proof.data.recipient == pk1,
+                            content: proof.data.content.clone(),
+                        })
+                    })
+                    .flatten()
+                    .collect::<Vec<FindByPairResult>>(),
+            ) else {
                 return;
             };
             print!("{}", json_str);
