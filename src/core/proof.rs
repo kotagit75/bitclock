@@ -196,3 +196,81 @@ impl UnSignedProof {
         Ok(new_proof)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::util::key::generate_pk_and_sk;
+
+    use super::*;
+
+    fn data_for_test(address: &Address) -> Data {
+        Data {
+            recipient: address.clone(),
+            issuer: address.clone(),
+            content: "test".to_string(),
+            sign: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn test_create_sign_to_proof() {
+        let (address, node_sk) = generate_pk_and_sk(512).unwrap();
+        let (_, sk) = generate_pk_and_sk(512).unwrap();
+        let data = data_for_test(&address);
+        let Ok(signature) = create_sign_to_proof(
+            node_sk.clone(),
+            data.clone(),
+            Vec::new(),
+            sk.clone(),
+            address.clone(),
+            0,
+            0,
+        ) else {
+            panic!();
+        };
+        assert!(
+            sign(
+                &proof_to_buf_for_sign(data, Vec::new(), sk, address, 0, 0).unwrap(),
+                node_sk
+            )
+            .unwrap()
+                == signature
+        );
+    }
+
+    #[test]
+    fn test_verify_sign() {
+        let (address, node_sk) = generate_pk_and_sk(512).unwrap();
+        let (_, sk) = generate_pk_and_sk(512).unwrap();
+        let data = data_for_test(&address);
+        let Ok(signature) = create_sign_to_proof(
+            node_sk.clone(),
+            data.clone(),
+            Vec::new(),
+            sk.clone(),
+            address.clone(),
+            0,
+            0,
+        ) else {
+            panic!();
+        };
+        let proof = Proof {
+            data: data.clone(),
+            stamps: Vec::new(),
+            sk: sk.clone(),
+            address: address.clone(),
+            difficulty: 0,
+            time: 0,
+            sign: signature.clone(),
+        };
+        assert!(
+            verify(
+                &proof_to_buf_for_sign(data, Vec::new(), sk, address.clone(), 0, 0).unwrap(),
+                address,
+                signature
+            )
+            .is_ok()
+                && proof.verify_sign()
+        );
+    }
+}
