@@ -7,7 +7,7 @@ use crate::{
     util::key::SK,
 };
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct State {
     pub proof_pool: ProofPool,
     pub stamp_pool: Vec<Stamp>,
