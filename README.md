@@ -98,6 +98,14 @@ Options:
 > [!CAUTION]
 > Never make the `node` directory or any files within it publicly accessible. Doing so could result in the leakage of your private key.
 
+### Example
+#### Chat
+Please run the command below:
+```bash
+./example/chat/main.sh '[pair_address]'
+```
+Enter your message and press the Enter key to send it.
+
 ## :jigsaw: APIs
 Users can control BitClock via an HTTP server.
 
