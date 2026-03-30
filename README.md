@@ -83,6 +83,9 @@ $ ./target/release/cli verify '[proof]'
 # compare the issuance times of the two proofs
 $ ./target/release/cli compare '[secret_key1]' '[secret_key2]'
 
+# sort proofs by time
+$ ./target/release/cli sort
+
 # display help
 $ ./target/release/bitclock -h
 Usage: bitclock [OPTIONS]
@@ -107,6 +110,7 @@ Users can control BitClock via an HTTP server.
 | <ul><li> [x] </ul> | `GET` | /query/pool | get proof pool |
 | <ul><li> [x] </ul> | `GET` | /query/peers | get peers |
 | <ul><li> [x] </ul> | `GET` | /query/compare | compare the issuance times of the two proofs |
+| <ul><li> [x] </ul> | `GET` | /query/sort | sort proofs by time |
 
 ### Commands that can be executed at the `/` endpoint
 - Add a peer - Post a request with `{"AddPeer": "peerIP"}` in the body
