@@ -80,13 +80,16 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::key::generate_pk_and_sk;
+    use crate::{model::stamp::Stamp, util::key::generate_pk_and_sk};
 
     use super::*;
 
-    fn update_test(event: Event, time: i64) -> (State /*before*/, State /*after */, Vec<Effect>) {
+    fn update_test<F>(event: F, time: i64) -> (State /*before*/, State /*after */, Vec<Effect>)
+    where
+        F: Fn(State) -> Event,
+    {
         let state = State::new(generate_pk_and_sk(512).unwrap()).unwrap();
-        let (new_state, effects) = update(state.clone(), event, time);
+        let (new_state, effects) = update(state.clone(), event(state.clone()), time);
         (state, new_state, effects)
     }
 
@@ -95,7 +98,7 @@ mod tests {
         let (pk, _) = generate_pk_and_sk(512).unwrap();
         let difficulty = 3;
         let (state, new_state, effects) = update_test(
-            Event::P2PRequest(P2PMessage::RequestStamp(pk.clone(), difficulty)),
+            |_| Event::P2PRequest(P2PMessage::RequestStamp(pk.clone(), difficulty)),
             0,
         );
         assert_eq!(state, new_state);
@@ -119,5 +122,28 @@ mod tests {
                 .collect::<Vec<usize>>(),
             (0..calc_number_of_stamps()).collect::<Vec<usize>>()
         );
+    }
+
+    #[test]
+    fn p2p_responce_stamp_test() {
+        let (pk, _) = generate_pk_and_sk(512).unwrap();
+        let create_stamp = |state: State| Stamp {
+            address: state.address.clone(),
+            count: 0,
+            pk: pk.clone(),
+            nonce: 0,
+            id: 0,
+            sign: Vec::new(),
+        };
+        let (state, new_state, effects) = update_test(
+            |state| Event::P2PRequest(P2PMessage::ResponceStamp(pk.clone(), create_stamp(state))),
+            0,
+        );
+        assert_eq!(new_state.stamp_pool.len(), 1);
+        assert_eq!(
+            new_state.stamp_pool.get(0).unwrap().clone(),
+            create_stamp(state)
+        );
+        assert_eq!(effects.len(), 0);
     }
 }
