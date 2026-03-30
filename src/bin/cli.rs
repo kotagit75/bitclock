@@ -24,7 +24,7 @@ enum SubCommands {
     },
     Proof {
         recipient_der: String,
-        credential: String,
+        content: String,
     },
     State,
     Address,
@@ -91,14 +91,14 @@ async fn main() {
         }
         SubCommands::Proof {
             recipient_der,
-            credential,
+            content,
         } => {
             let recipient = Address { der: recipient_der };
             let Ok(data) = Data::new(
                 state.node_sk.clone(),
                 recipient,
                 state.address.clone(),
-                credential,
+                content,
             ) else {
                 return;
             };

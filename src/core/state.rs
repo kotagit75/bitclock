@@ -147,7 +147,7 @@ mod tests {
             node_sk.clone(),
             address.clone(),
             address.clone(),
-            "credential".to_string(),
+            "content".to_string(),
         )
         .unwrap();
         let state = State::new((address.clone(), node_sk.clone())).unwrap();

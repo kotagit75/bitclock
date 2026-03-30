@@ -6,6 +6,6 @@ use crate::model::{address::Address, signature::Signature};
 pub struct Data {
     pub recipient: Address,
     pub issuer: Address,
-    pub credential: String,
+    pub content: String,
     pub sign: Signature,
 }

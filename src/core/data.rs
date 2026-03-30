@@ -10,15 +10,15 @@ impl Data {
         node_sk: SK,
         recipient: Address,
         issuer: Address,
-        credential: String,
+        content: String,
     ) -> Result<Self, ()> {
-        let Ok(sign) = create_sign_to_data(node_sk, &recipient, &issuer, credential.clone()) else {
+        let Ok(sign) = create_sign_to_data(node_sk, &recipient, &issuer, content.clone()) else {
             return Err(());
         };
         Ok(Self {
             recipient,
             issuer,
-            credential,
+            content,
             sign,
         })
     }
@@ -26,12 +26,12 @@ impl Data {
     pub fn to_string(&self) -> String {
         format!(
             "{} {} {}",
-            self.recipient.der, self.issuer.der, self.credential
+            self.recipient.der, self.issuer.der, self.content
         )
     }
 
     pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
-        data_to_buf_for_sign(&self.recipient, &self.issuer, self.credential.clone())
+        data_to_buf_for_sign(&self.recipient, &self.issuer, self.content.clone())
     }
 
     pub fn verify_sign(&self) -> bool {
@@ -43,7 +43,7 @@ impl Data {
 pub fn data_to_buf_for_sign(
     recipient: &Address,
     issuer: &Address,
-    credential: String,
+    content: String,
 ) -> Result<Vec<u8>, ()> {
     let Ok(recipient_buf) = recipient.key().public_key_to_der() else {
         return Err(());
@@ -51,17 +51,17 @@ pub fn data_to_buf_for_sign(
     let Ok(issuer_buf) = issuer.key().public_key_to_der() else {
         return Err(());
     };
-    let credential_buf = credential.as_bytes().to_vec();
-    Ok([recipient_buf, issuer_buf, credential_buf].concat())
+    let content_buf = content.as_bytes().to_vec();
+    Ok([recipient_buf, issuer_buf, content_buf].concat())
 }
 
 pub fn create_sign_to_data(
     node_sk: SK,
     recipient: &Address,
     issuer: &Address,
-    credential: String,
+    content: String,
 ) -> Result<Signature, ()> {
-    match data_to_buf_for_sign(recipient, issuer, credential).and_then(|buf| sign(&buf, node_sk)) {
+    match data_to_buf_for_sign(recipient, issuer, content).and_then(|buf| sign(&buf, node_sk)) {
         Ok(sign) => Ok(sign),
         Err(_) => Err(()),
     }
@@ -77,15 +77,15 @@ mod tests {
     fn test_create_sign_to_data() {
         let (recipient, node_sk) = generate_pk_and_sk(512).unwrap();
         let (issuer, _) = generate_pk_and_sk(512).unwrap();
-        let credential = "test".to_string();
+        let content = "test".to_string();
         let Ok(signature) =
-            create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
+            create_sign_to_data(node_sk.clone(), &recipient, &issuer, content.clone())
         else {
             panic!();
         };
         assert!(
             sign(
-                &data_to_buf_for_sign(&recipient, &issuer, credential).unwrap(),
+                &data_to_buf_for_sign(&recipient, &issuer, content).unwrap(),
                 node_sk
             )
             .unwrap()
@@ -97,22 +97,22 @@ mod tests {
     fn test_verify_sign() {
         let (recipient, node_sk) = generate_pk_and_sk(512).unwrap();
         let (issuer, _) = generate_pk_and_sk(512).unwrap();
-        let credential = "test".to_string();
+        let content = "test".to_string();
         let data = Data::new(
             node_sk.clone(),
             recipient.clone(),
             issuer.clone(),
-            credential.clone(),
+            content.clone(),
         )
         .unwrap();
         let Ok(signature) =
-            create_sign_to_data(node_sk.clone(), &recipient, &issuer, credential.clone())
+            create_sign_to_data(node_sk.clone(), &recipient, &issuer, content.clone())
         else {
             panic!();
         };
         assert!(
             verify(
-                &data_to_buf_for_sign(&recipient, &issuer, credential).unwrap(),
+                &data_to_buf_for_sign(&recipient, &issuer, content).unwrap(),
                 recipient,
                 signature
             )

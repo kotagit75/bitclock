@@ -38,7 +38,7 @@ Initially, ProofPool will show that there is nothing there.
 ```
 
 ## 4. Create Proof
-Let's create a proof. You can register any recipient and credential in a proof. For example, let’s create a proof with your own address as the recipient and “Hello world!” as the credential. You can retrieve your own address using the `./target/release/cli address` command.
+Let's create a proof. You can register any recipient and content in a proof. For example, let’s create a proof with your own address as the recipient and “Hello world!” as the content. You can retrieve your own address using the `./target/release/cli address` command.
 ```bash
 ./target/release/cli address
 # [display your own address]
@@ -59,7 +59,7 @@ Let’s take a look at the proof we created in the previous chapter. If you run 
 ```
 If the following JSON data is output, the search was successful. The output JSON contains data regarding the proof that was created.
 ```json
-{"data":{..., "credential": "Hello world!"},"stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":...,"time":1774513428556,"sign":[...]}
+{"data":{..., "content": "Hello world!"},"stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":...,"time":1774513428556,"sign":[...]}
 ```
 
 ## 5. Verify Proof
