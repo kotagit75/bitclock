@@ -77,3 +77,47 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
         ),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::util::key::generate_pk_and_sk;
+
+    use super::*;
+
+    fn update_test(event: Event, time: i64) -> (State /*before*/, State /*after */, Vec<Effect>) {
+        let state = State::new(generate_pk_and_sk(512).unwrap()).unwrap();
+        let (new_state, effects) = update(state.clone(), event, time);
+        (state, new_state, effects)
+    }
+
+    #[test]
+    fn p2p_request_stamp_test() {
+        let (pk, _) = generate_pk_and_sk(512).unwrap();
+        let difficulty = 3;
+        let (state, new_state, effects) = update_test(
+            Event::P2PRequest(P2PMessage::RequestStamp(pk.clone(), difficulty)),
+            0,
+        );
+        assert_eq!(state, new_state);
+        assert!(effects.iter().all(|effect| {
+            if let Effect::CreateStamp(pk_, difficulty_, _) = effect {
+                pk_ == &pk && difficulty_ == &difficulty
+            } else {
+                false
+            }
+        }));
+        assert_eq!(
+            effects
+                .iter()
+                .map(|effect| {
+                    if let Effect::CreateStamp(_, _, id) = effect {
+                        *id
+                    } else {
+                        panic!("Expected CreateStamp effect")
+                    }
+                })
+                .collect::<Vec<usize>>(),
+            (0..calc_number_of_stamps()).collect::<Vec<usize>>()
+        );
+    }
+}
