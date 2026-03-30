@@ -228,13 +228,13 @@ mod tests {
         ) else {
             panic!();
         };
-        assert!(
+        assert_eq!(
             sign(
                 &proof_to_buf_for_sign(data, Vec::new(), sk, address, 0, 0).unwrap(),
                 node_sk
             )
-            .unwrap()
-                == signature
+            .unwrap(),
+            signature
         );
     }
 

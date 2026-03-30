@@ -83,13 +83,13 @@ mod tests {
         else {
             panic!();
         };
-        assert!(
+        assert_eq!(
             sign(
                 &data_to_buf_for_sign(&recipient, &issuer, content).unwrap(),
                 node_sk
             )
-            .unwrap()
-                == signature
+            .unwrap(),
+            signature
         );
     }
 

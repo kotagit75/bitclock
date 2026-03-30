@@ -151,13 +151,13 @@ mod tests {
         else {
             panic!();
         };
-        assert!(
+        assert_eq!(
             sign(
                 &stamp_to_buf_for_sign(&address, 0, &pk, 0, 0).unwrap(),
                 node_sk
             )
-            .unwrap()
-                == signature
+            .unwrap(),
+            signature
         );
     }
 
