@@ -193,7 +193,7 @@ async fn main() {
                             return None;
                         }
                         Some(FindByPairResult {
-                            is_first: proof.data.recipient == pk1,
+                            is_first: proof.data.issuer == pk1,
                             content: proof.data.content.clone(),
                         })
                     })
