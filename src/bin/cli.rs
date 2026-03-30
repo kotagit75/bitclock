@@ -40,6 +40,7 @@ enum SubCommands {
         der1: String,
         der2: String,
     },
+    Sort,
 }
 
 async fn get_state() -> Result<State, reqwest::Error> {
@@ -158,6 +159,12 @@ async fn main() {
                 return;
             };
             print!("{:?}", result);
+        }
+        SubCommands::Sort => {
+            let Ok(json_str) = serde_json::to_string(&state.proof_pool.sort_pool()) else {
+                return;
+            };
+            print!("{}", json_str);
         }
     }
 }
