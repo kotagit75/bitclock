@@ -48,10 +48,10 @@ async fn handle_command(
     State((tx, _)): State<(Sender<Event>, Receiver<crate::model::state::State>)>,
     extract::Json(message): extract::Json<APICommand>,
 ) -> response::Json<APIResponse> {
-    let (responce_tx, mut responce_rx): (mpsc::Sender<APIResponse>, mpsc::Receiver<APIResponse>) =
+    let (response_tx, mut response_rx): (mpsc::Sender<APIResponse>, mpsc::Receiver<APIResponse>) =
         mpsc::channel(100);
-    let _ = tx.send(Event::APIRequest(message, responce_tx)).await;
-    response::Json(responce_rx.recv().await.unwrap())
+    let _ = tx.send(Event::APIRequest(message, response_tx)).await;
+    response::Json(response_rx.recv().await.unwrap())
 }
 
 async fn handle_query(
