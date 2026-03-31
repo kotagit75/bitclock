@@ -101,7 +101,7 @@ Options:
 > Never make the `node` directory or any files within it publicly accessible. Doing so could result in the leakage of your private key.
 
 ### Example
-#### Chat
+#### Chat App
 Please run the command below:
 ```bash
 ./example/chat/main.sh '[pair_address]'
