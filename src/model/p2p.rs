@@ -13,3 +13,10 @@ pub enum P2PMessage {
     ResponseStamp(PK, Stamp),
     UpdateProofpool(ProofPool),
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub struct Client {
+    pub ip_addr: String,
+}
+
+pub const MY_IP_ADDR: &str = "127.0.0.1";

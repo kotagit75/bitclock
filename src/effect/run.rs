@@ -1,6 +1,11 @@
 use crate::{
     core::stamp::{calc_nonce, create_sign_to_stamp},
-    model::{client::Client, effect::Effect, p2p::P2PMessage, stamp::Stamp, state::State},
+    model::{
+        effect::Effect,
+        p2p::{Client, P2PMessage},
+        stamp::Stamp,
+        state::State,
+    },
 };
 
 pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {

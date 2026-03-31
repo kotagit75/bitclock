@@ -10,7 +10,7 @@ use crate::model::{
     p2p::{P2P_PORT, P2PMessage},
 };
 
-use crate::model::client::Client;
+use crate::model::p2p::Client;
 
 pub async fn init_p2p(tx: Sender<Event>) {
     let app = Router::new()

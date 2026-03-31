@@ -1,4 +1,4 @@
-use crate::model::client::Client;
+use crate::model::p2p::Client;
 
 impl Client {
     pub fn new(ip_addr: String) -> Self {

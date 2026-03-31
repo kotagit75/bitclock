@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::{
     model::{
         address::Address,
-        client::{Client, MY_IP_ADDR},
+        p2p::{Client, MY_IP_ADDR},
         proof::{Proof, UnSignedProof},
         proofpool::ProofPool,
         stamp::Stamp,

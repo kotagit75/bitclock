@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     model::{
-        address::Address, client::Client, proof::UnSignedProof, proofpool::ProofPool, stamp::Stamp,
+        address::Address, p2p::Client, proof::UnSignedProof, proofpool::ProofPool, stamp::Stamp,
     },
     util::key::SK,
 };
