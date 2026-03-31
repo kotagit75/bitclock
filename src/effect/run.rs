@@ -20,13 +20,13 @@ pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
                     id,
                     sign,
                 };
-                return Some(Effect::Broadcast(P2PMessage::ResponceStamp(pk, stamp)));
+                return Some(Effect::Broadcast(P2PMessage::ResponseStamp(pk, stamp)));
             }
         }
         Effect::Broadcast(message) => {
             broadcast(state.peers, message).await;
         }
-        Effect::APIResponce(tx, res) => {
+        Effect::APIResponse(tx, res) => {
             let _ = tx.send(res).await;
         }
     }

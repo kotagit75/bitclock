@@ -9,5 +9,5 @@ use crate::{
 pub enum Effect {
     CreateStamp(PK, usize /*difficulty */, usize /*id */),
     Broadcast(P2PMessage),
-    APIResponce(Sender<APIResponse>, APIResponse),
+    APIResponse(Sender<APIResponse>, APIResponse),
 }

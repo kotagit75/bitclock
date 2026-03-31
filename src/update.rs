@@ -12,7 +12,7 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
                 .collect::<Vec<_>>();
             (state, effects)
         }
-        Event::P2PRequest(P2PMessage::ResponceStamp(pk, stamp)) => {
+        Event::P2PRequest(P2PMessage::ResponseStamp(pk, stamp)) => {
             let state = state.add_to_stamp_pool(stamp);
             let (Some(un_stamped_proof), Some(stamps)) = (
                 state.find_from_un_stamped_proof_pool(&pk),
@@ -61,19 +61,19 @@ pub fn update(state: State, event: Event, time: i64) -> (State, Vec<Effect>) {
                 Ok((un_signed_proof, pk)) => (
                     state.add_to_un_signed_proof_pool(un_signed_proof.clone()),
                     vec![
-                        Effect::APIResponce(tx, APIResponse::Proof(Ok(un_signed_proof.sk))),
+                        Effect::APIResponse(tx, APIResponse::Proof(Ok(un_signed_proof.sk))),
                         Effect::Broadcast(P2PMessage::RequestStamp(pk, un_signed_proof.difficulty)),
                     ],
                 ),
                 Err(_) => (
                     state,
-                    vec![Effect::APIResponce(tx, APIResponse::Proof(Err(())))],
+                    vec![Effect::APIResponse(tx, APIResponse::Proof(Err(())))],
                 ),
             }
         }
         Event::APIRequest(APICommand::AddPeer(ip), tx) => (
             state.add_peer(ip),
-            vec![Effect::APIResponce(tx, APIResponse::AddPeer)],
+            vec![Effect::APIResponse(tx, APIResponse::AddPeer)],
         ),
     }
 }
@@ -125,7 +125,7 @@ mod tests {
     }
 
     #[test]
-    fn p2p_responce_stamp_test() {
+    fn p2p_response_stamp_test() {
         let (pk, _) = generate_pk_and_sk(512).unwrap();
         let create_stamp = |state: State| Stamp {
             address: state.address.clone(),
@@ -136,7 +136,7 @@ mod tests {
             sign: Vec::new(),
         };
         let (state, new_state, effects) = update_test(
-            |state| Event::P2PRequest(P2PMessage::ResponceStamp(pk.clone(), create_stamp(state))),
+            |state| Event::P2PRequest(P2PMessage::ResponseStamp(pk.clone(), create_stamp(state))),
             0,
         );
         assert_eq!(new_state.stamp_pool.len(), 1);
