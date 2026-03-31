@@ -9,6 +9,8 @@ BitClock is a distributed timestamp system without requiring consensus. Each nod
 ![Rust](https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white)
 ![test status](https://github.com/kotagit75/bitclock/actions/workflows/test.yaml/badge.svg)
 
+![boot_log](assets/boot_log.png)
+
 > [!NOTE]
 > BitClock is currently in active development. The API and features may change without notice.
 
