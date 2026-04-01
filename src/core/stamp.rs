@@ -3,7 +3,10 @@ use sha2::Digest;
 use crate::{
     core::signature::{sign, verify},
     model::{address::Address, signature::Signature, stamp::Stamp},
-    util::key::{PK, SK},
+    util::{
+        key::{PK, SK},
+        vdf::{solve, verify_solution},
+    },
 };
 
 impl Stamp {
@@ -129,8 +132,47 @@ pub fn is_valid_stamp(stamp: &Stamp, difficulty: usize, proof_pk: PK) -> bool {
         stamp.nonce,
         stamp.id,
     );
+    let is_valid_stamp = verify_solution_stamp(stamp.clone());
     let is_valid_sign = stamp.verify_sign();
-    is_valid_pk && is_valid_nonce && is_valid_sign
+    is_valid_pk && is_valid_nonce && is_valid_stamp && is_valid_sign
+}
+
+fn stamp_to_buf_for_vdf(
+    address: &Address,
+    count: u32,
+    pk: &PK,
+    nonce: u32,
+    id: usize,
+) -> Result<Vec<u8>, ()> {
+    stamp_to_buf_for_sign(address, count, pk, nonce, id)
+}
+
+pub fn calc_solution(
+    address: &Address,
+    count: u32,
+    pk: &PK,
+    nonce: u32,
+    id: usize,
+) -> Result<Vec<u8>, ()> {
+    if let Ok(buf) = stamp_to_buf_for_vdf(address, count, pk, nonce, id) {
+        solve(buf.as_slice()).or(Err(()))
+    } else {
+        Err(())
+    }
+}
+
+pub fn verify_solution_stamp(stamp: Stamp) -> bool {
+    if let Ok(buf) = stamp_to_buf_for_vdf(
+        &stamp.address,
+        stamp.count,
+        &stamp.pk,
+        stamp.nonce,
+        stamp.id,
+    ) {
+        verify_solution(buf.as_slice(), stamp.solution.as_slice())
+    } else {
+        false
+    }
 }
 
 pub fn sum_of_count(stamps: Vec<Stamp>) -> u32 {
@@ -173,6 +215,7 @@ mod tests {
             address: address.clone(),
             count: 0,
             pk: pk.clone(),
+            solution: Vec::new(),
             nonce: 0,
             id: 0,
             sign: signature.clone(),

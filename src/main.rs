@@ -2,6 +2,8 @@
 extern crate log;
 extern crate simple_logger as logger;
 
+extern crate vdf;
+
 use clap::Parser;
 
 use crate::bitclock::start;

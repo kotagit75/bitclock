@@ -132,6 +132,7 @@ mod tests {
             count: 0,
             pk: pk.clone(),
             nonce: 0,
+            solution: Vec::new(),
             id: 0,
             sign: Vec::new(),
         };

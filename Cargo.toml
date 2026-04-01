@@ -17,3 +17,4 @@ sha2 = "0.10.9"
 simple_logger = "5.2.0"
 sysinfo = "0.38.4"
 tokio = { version = "1.50.0", features = ["full"]}
+vdf = "0.1.0"
