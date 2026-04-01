@@ -11,6 +11,7 @@ pub struct Stamp {
     pub count: u32,
     pub pk: PK,
     pub nonce: u32,
+    pub solution: Vec<u8>,
     pub id: usize,
     pub sign: Signature,
 }

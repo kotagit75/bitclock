@@ -1,5 +1,5 @@
 use crate::{
-    core::stamp::{calc_nonce, create_sign_to_stamp},
+    core::stamp::{calc_nonce, calc_solution, create_sign_to_stamp},
     model::{
         effect::Effect,
         p2p::{Client, P2PMessage},
@@ -14,6 +14,9 @@ pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
             let address = state.address;
             let count = state.count + 1;
             let nonce = calc_nonce(difficulty, &address, count, &pk, id);
+            let Ok(solution) = calc_solution(&address, count, &pk, nonce, id) else {
+                return None;
+            };
             if let Ok(sign) =
                 create_sign_to_stamp(state.node_sk, &address, count, pk.clone(), nonce, id)
             {
@@ -21,6 +24,7 @@ pub async fn run_effect(state: State, effect: Effect) -> Option<Effect> {
                     address,
                     count,
                     pk: pk.clone(),
+                    solution,
                     nonce,
                     id,
                     sign,
