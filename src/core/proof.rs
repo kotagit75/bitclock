@@ -1,5 +1,7 @@
 use std::cmp::Ordering;
 
+use openssl::error::ErrorStack;
+
 use crate::core::signature::{sign, verify};
 use crate::core::stamp::is_valid_stamp;
 use crate::core::stamp::sum_of_count;
@@ -34,7 +36,7 @@ impl Proof {
     }
 }
 impl Proof {
-    pub fn get_proof_pk(&self) -> Result<PK, ()> {
+    pub fn get_proof_pk(&self) -> Result<PK, ErrorStack> {
         self.sk.to_pk()
     }
 
