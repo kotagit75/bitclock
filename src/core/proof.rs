@@ -59,11 +59,8 @@ fn proof_to_buf_for_sign(
         "{:?} {:?} {:?} {:?} {:?} {:?}",
         data.to_string(),
         {
-            let stamp_bufs: Vec<Vec<u8>> = stamps
-                .iter()
-                .map(|stamp| stamp.to_buf_for_sign())
-                .filter_map(Result::ok)
-                .collect();
+            let stamp_bufs: Vec<Vec<u8>> =
+                stamps.iter().map(|stamp| stamp.to_buf_for_sign()).collect();
             stamp_bufs
         }
         .concat(),

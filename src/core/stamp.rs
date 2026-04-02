@@ -10,40 +10,26 @@ use crate::{
 };
 
 impl Stamp {
-    pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
+    pub fn to_buf_for_sign(&self) -> Vec<u8> {
         stamp_to_buf_for_sign(&self.address, self.count, &self.pk, self.nonce, self.id)
     }
 
     pub fn verify_sign(&self) -> bool {
-        self.to_buf_for_sign()
-            .map(|buf| verify(&buf, self.address.clone(), self.sign.clone()))
-            .is_ok()
+        verify(
+            self.to_buf_for_sign().as_slice(),
+            self.address.clone(),
+            self.sign.clone(),
+        )
+        .is_ok()
     }
 }
-fn stamp_to_buf_for_sign(
-    address: &Address,
-    count: u32,
-    pk: &PK,
-    nonce: u32,
-    id: usize,
-) -> Result<Vec<u8>, ()> {
-    let Ok(address_buf) = address.key().public_key_to_der() else {
-        return Err(());
-    };
-    let count_buf = count.to_be_bytes();
-    let Ok(pk_buf) = pk.key().public_key_to_der() else {
-        return Err(());
-    };
-    let nonce_buf = nonce.to_be_bytes();
-    let id_buf = id.to_be_bytes();
-    Ok([
-        address_buf,
-        count_buf.to_vec(),
-        pk_buf,
-        nonce_buf.to_vec(),
-        id_buf.to_vec(),
-    ]
-    .concat())
+fn stamp_to_buf_for_sign(address: &Address, count: u32, pk: &PK, nonce: u32, id: usize) -> Vec<u8> {
+    format!(
+        "{:?} {:?} {:?} {:?} {:?}",
+        address.der, count, pk.der, nonce, id,
+    )
+    .as_bytes()
+    .to_vec()
 }
 fn stamp_to_buf_for_nonce(
     address: &Address,
@@ -83,8 +69,10 @@ pub fn create_sign_to_stamp(
     nonce: u32,
     id: usize,
 ) -> Result<Signature, ()> {
-    match stamp_to_buf_for_sign(address, count, &pk, nonce, id).and_then(|buf| sign(&buf, node_sk))
-    {
+    match sign(
+        stamp_to_buf_for_sign(address, count, &pk, nonce, id).as_slice(),
+        node_sk,
+    ) {
         Ok(sign) => Ok(sign),
         Err(_) => Err(()),
     }
@@ -137,13 +125,7 @@ pub fn is_valid_stamp(stamp: &Stamp, difficulty: usize, proof_pk: PK) -> bool {
     is_valid_pk && is_valid_nonce && is_valid_stamp && is_valid_sign
 }
 
-fn stamp_to_buf_for_vdf(
-    address: &Address,
-    count: u32,
-    pk: &PK,
-    nonce: u32,
-    id: usize,
-) -> Result<Vec<u8>, ()> {
+fn stamp_to_buf_for_vdf(address: &Address, count: u32, pk: &PK, nonce: u32, id: usize) -> Vec<u8> {
     stamp_to_buf_for_sign(address, count, pk, nonce, id)
 }
 
@@ -154,25 +136,21 @@ pub fn calc_solution(
     nonce: u32,
     id: usize,
 ) -> Result<Vec<u8>, ()> {
-    if let Ok(buf) = stamp_to_buf_for_vdf(address, count, pk, nonce, id) {
-        solve(buf.as_slice()).or(Err(()))
-    } else {
-        Err(())
-    }
+    solve(stamp_to_buf_for_vdf(address, count, pk, nonce, id).as_slice()).or(Err(()))
 }
 
 pub fn verify_solution_stamp(stamp: Stamp) -> bool {
-    if let Ok(buf) = stamp_to_buf_for_vdf(
-        &stamp.address,
-        stamp.count,
-        &stamp.pk,
-        stamp.nonce,
-        stamp.id,
-    ) {
-        verify_solution(buf.as_slice(), stamp.solution.as_slice())
-    } else {
-        false
-    }
+    verify_solution(
+        stamp_to_buf_for_vdf(
+            &stamp.address,
+            stamp.count,
+            &stamp.pk,
+            stamp.nonce,
+            stamp.id,
+        )
+        .as_slice(),
+        stamp.solution.as_slice(),
+    )
 }
 
 pub fn sum_of_count(stamps: Vec<Stamp>) -> u32 {
@@ -194,11 +172,7 @@ mod tests {
             panic!();
         };
         assert_eq!(
-            sign(
-                &stamp_to_buf_for_sign(&address, 0, &pk, 0, 0).unwrap(),
-                node_sk
-            )
-            .unwrap(),
+            sign(&stamp_to_buf_for_sign(&address, 0, &pk, 0, 0), node_sk).unwrap(),
             signature
         );
     }
@@ -222,7 +196,7 @@ mod tests {
         };
         assert!(
             verify(
-                &stamp_to_buf_for_sign(&address, 0, &pk, 0, 0).unwrap(),
+                &stamp_to_buf_for_sign(&address, 0, &pk, 0, 0),
                 address,
                 signature
             )
