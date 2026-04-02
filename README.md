@@ -39,7 +39,7 @@ Instead, each node maintains a counter that serves as its local time, and the ti
 - Examples - [Examples](docs/examples.md)
 
 ## :rocket: Getting Started
-### Installation
+### 1.Installation
 ```bash
 # Clone the repository (or Download ZIP)
 $ git clone https://github.com/kotagit75/bitclock.git
@@ -50,11 +50,10 @@ $ cd bitclock
 # build
 $ cargo build --release
 ```
-### Simple Example
+### 2.Simple Example
 - [Text-Proof](example/text-proof/README.md) - You can create simple proofs.
-
-### [Tutorial](docs/tutorial.md)
-### Usage
+### 3.[Tutorial](docs/tutorial.md)
+### 4.Usage
 ```bash
 # run
 $ ./target/release/bitclock bitclock
