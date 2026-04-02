@@ -36,6 +36,7 @@ Instead, each node maintains a counter that serves as its local time, and the ti
 ## :books: Documents
 - About the algorithm - [algorithm](docs/algorithm.md)
 - Tutorial - [Tutorial](docs/tutorial.md)
+- Examples - [Examples](docs/examples.md)
 
 ## :rocket: Getting Started
 ### Installation
