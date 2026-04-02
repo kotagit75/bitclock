@@ -55,7 +55,7 @@ fn proof_to_buf_for_sign(
     difficulty: usize,
     time: i64,
 ) -> Vec<u8> {
-    return format!(
+    format!(
         "{:?} {:?} {:?} {:?} {:?} {:?}",
         data.to_string(),
         {
@@ -73,7 +73,7 @@ fn proof_to_buf_for_sign(
         time
     )
     .as_bytes()
-    .to_vec();
+    .to_vec()
 }
 pub fn create_sign_to_proof(
     node_sk: SK,
