@@ -1,3 +1,5 @@
+use openssl::error::ErrorStack;
+
 use crate::{
     core::signature::{sign, verify},
     model::{address::Address, data::Data, signature::Signature},
@@ -30,29 +32,22 @@ impl Data {
         )
     }
 
-    pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
+    pub fn to_buf_for_sign(&self) -> Vec<u8> {
         data_to_buf_for_sign(&self.recipient, &self.issuer, self.content.clone())
     }
 
     pub fn verify_sign(&self) -> bool {
-        self.to_buf_for_sign()
-            .map(|buf| verify(&buf, self.recipient.clone(), self.sign.clone()))
-            .is_ok()
+        verify(
+            &self.to_buf_for_sign(),
+            self.recipient.clone(),
+            self.sign.clone(),
+        )
     }
 }
-pub fn data_to_buf_for_sign(
-    recipient: &Address,
-    issuer: &Address,
-    content: String,
-) -> Result<Vec<u8>, ()> {
-    let Ok(recipient_buf) = recipient.key().public_key_to_der() else {
-        return Err(());
-    };
-    let Ok(issuer_buf) = issuer.key().public_key_to_der() else {
-        return Err(());
-    };
-    let content_buf = content.as_bytes().to_vec();
-    Ok([recipient_buf, issuer_buf, content_buf].concat())
+pub fn data_to_buf_for_sign(recipient: &Address, issuer: &Address, content: String) -> Vec<u8> {
+    format!("{:?} {:?} {:?}", recipient.der, issuer.der, content)
+        .as_bytes()
+        .to_vec()
 }
 
 pub fn create_sign_to_data(
@@ -60,11 +55,8 @@ pub fn create_sign_to_data(
     recipient: &Address,
     issuer: &Address,
     content: String,
-) -> Result<Signature, ()> {
-    match data_to_buf_for_sign(recipient, issuer, content).and_then(|buf| sign(&buf, node_sk)) {
-        Ok(sign) => Ok(sign),
-        Err(_) => Err(()),
-    }
+) -> Result<Signature, ErrorStack> {
+    sign(&data_to_buf_for_sign(recipient, issuer, content), node_sk)
 }
 
 #[cfg(test)]
@@ -84,11 +76,7 @@ mod tests {
             panic!();
         };
         assert_eq!(
-            sign(
-                &data_to_buf_for_sign(&recipient, &issuer, content).unwrap(),
-                node_sk
-            )
-            .unwrap(),
+            sign(&data_to_buf_for_sign(&recipient, &issuer, content), node_sk).unwrap(),
             signature
         );
     }
@@ -112,12 +100,10 @@ mod tests {
         };
         assert!(
             verify(
-                &data_to_buf_for_sign(&recipient, &issuer, content).unwrap(),
+                &data_to_buf_for_sign(&recipient, &issuer, content),
                 recipient,
                 signature
-            )
-            .is_ok()
-                && data.verify_sign()
+            ) && data.verify_sign()
         );
     }
 }
