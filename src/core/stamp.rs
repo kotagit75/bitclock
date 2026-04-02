@@ -36,28 +36,15 @@ fn stamp_to_buf_for_nonce(
     pk: &PK,
     nonce: u32,
     id: usize,
-) -> Result<Vec<u8>, ()> {
-    let Ok(memo) = stamp_to_buf_for_nonce_memo(address, count, pk, id) else {
-        return Err(());
-    };
+) -> Vec<u8> {
+    let memo = stamp_to_buf_for_nonce_memo(address, count, pk, id);
     let nonce_buf = nonce.to_be_bytes();
-    Ok([memo, nonce_buf.to_vec()].concat())
+    [memo, nonce_buf.to_vec()].concat()
 }
-fn stamp_to_buf_for_nonce_memo(
-    address: &Address,
-    count: u32,
-    pk: &PK,
-    id: usize,
-) -> Result<Vec<u8>, ()> {
-    let Ok(address_buf) = address.key().public_key_to_der() else {
-        return Err(());
-    };
-    let count_buf = count.to_be_bytes();
-    let Ok(pk_buf) = pk.key().public_key_to_der() else {
-        return Err(());
-    };
-    let id_buf = id.to_be_bytes();
-    Ok([address_buf, count_buf.to_vec(), pk_buf, id_buf.to_vec()].concat())
+fn stamp_to_buf_for_nonce_memo(address: &Address, count: u32, pk: &PK, id: usize) -> Vec<u8> {
+    format!("{:?} {:?} {:?} {:?}", address.der, count, pk.der, id)
+        .as_bytes()
+        .to_vec()
 }
 
 pub fn create_sign_to_stamp(
@@ -88,11 +75,10 @@ pub fn verify_nonce(
     nonce: u32,
     id: usize,
 ) -> bool {
-    stamp_to_buf_for_nonce(address, count, pk, nonce, id)
-        .map(|buf| {
-            hex::encode(sha2::Sha256::digest(buf)).starts_with(&nonce_start_with_str(difficulty))
-        })
-        .is_ok()
+    hex::encode(sha2::Sha256::digest(stamp_to_buf_for_nonce(
+        address, count, pk, nonce, id,
+    )))
+    .starts_with(&nonce_start_with_str(difficulty))
 }
 pub fn verify_nonce_for_calc(memo: &[u8], nonce: u32, starts_with: &str) -> bool {
     hex::encode(sha2::Sha256::digest([memo, &nonce.to_be_bytes()].concat()))
@@ -101,7 +87,7 @@ pub fn verify_nonce_for_calc(memo: &[u8], nonce: u32, starts_with: &str) -> bool
 
 pub fn calc_nonce(difficulty: usize, address: &Address, count: u32, pk: &PK, id: usize) -> u32 {
     let start_with = &nonce_start_with_str(difficulty);
-    let memo = stamp_to_buf_for_nonce_memo(address, count, pk, id).unwrap();
+    let memo = stamp_to_buf_for_nonce_memo(address, count, pk, id);
     let mut nonce = 0;
     while !verify_nonce_for_calc(&memo, nonce, start_with) {
         nonce += 1
