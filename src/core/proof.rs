@@ -81,14 +81,11 @@ pub fn create_sign_to_proof(
     address: Address,
     difficulty: usize,
     time: i64,
-) -> Result<Signature, ()> {
-    match sign(
+) -> Result<Signature, ErrorStack> {
+    sign(
         &proof_to_buf_for_sign(data, stamps, sk, address, difficulty, time),
         node_sk,
-    ) {
-        Ok(sign) => Ok(sign),
-        Err(_) => Err(()),
-    }
+    )
 }
 
 pub fn calc_number_of_stamps() -> usize {
