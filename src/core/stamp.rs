@@ -1,3 +1,4 @@
+use openssl::error::ErrorStack;
 use sha2::Digest;
 
 use crate::{
@@ -54,14 +55,11 @@ pub fn create_sign_to_stamp(
     pk: PK,
     nonce: u32,
     id: usize,
-) -> Result<Signature, ()> {
-    match sign(
+) -> Result<Signature, ErrorStack> {
+    sign(
         stamp_to_buf_for_sign(address, count, &pk, nonce, id).as_slice(),
         node_sk,
-    ) {
-        Ok(sign) => Ok(sign),
-        Err(_) => Err(()),
-    }
+    )
 }
 
 fn nonce_start_with_str(difficulty: usize) -> String {
