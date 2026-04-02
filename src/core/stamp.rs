@@ -20,7 +20,6 @@ impl Stamp {
             self.address.clone(),
             self.sign.clone(),
         )
-        .is_ok()
     }
 }
 fn stamp_to_buf_for_sign(address: &Address, count: u32, pk: &PK, nonce: u32, id: usize) -> Vec<u8> {
@@ -199,9 +198,7 @@ mod tests {
                 &stamp_to_buf_for_sign(&address, 0, &pk, 0, 0),
                 address,
                 signature
-            )
-            .is_ok()
-                && stamp.verify_sign()
+            ) && stamp.verify_sign()
         );
     }
 }

@@ -1,4 +1,5 @@
 use openssl::{
+    error::ErrorStack,
     hash::MessageDigest,
     sign::{Signer, Verifier},
 };
@@ -8,32 +9,20 @@ use crate::{
     util::key::{PK, SK},
 };
 
-pub fn sign(data: &[u8], sk: SK) -> Result<Signature, ()> {
-    let Ok(mut signer) = Signer::new(MessageDigest::sha256(), &sk.key()) else {
-        return Err(());
-    };
-    let Ok(_) = signer.update(data) else {
-        return Err(());
-    };
-    let Ok(sign) = signer.sign_to_vec() else {
-        return Err(());
-    };
-    Ok(sign)
+pub fn sign(data: &[u8], sk: SK) -> Result<Signature, ErrorStack> {
+    Signer::new(MessageDigest::sha256(), &sk.key()).and_then(|mut signer| {
+        match signer.update(data) {
+            Ok(_) => signer.sign_to_vec(),
+            Err(e) => Err(e),
+        }
+    })
 }
 
-pub fn verify(data: &[u8], pk: PK, signature: Signature) -> Result<(), ()> {
-    let key = pk.key();
-    let Ok(mut verifyer) = Verifier::new(MessageDigest::sha256(), &key) else {
-        return Err(());
-    };
-    let Ok(_) = verifyer.update(data) else {
-        return Err(());
-    };
-    let Ok(result) = verifyer.verify(&signature) else {
-        return Err(());
-    };
-    match result {
-        true => Ok(()),
-        false => Err(()),
-    }
+pub fn verify(data: &[u8], pk: PK, signature: Signature) -> bool {
+    Verifier::new(MessageDigest::sha256(), &pk.key())
+        .and_then(|mut verifyer| match verifyer.update(data) {
+            Ok(_) => verifyer.verify(&signature).or_else(|e| Err(e)),
+            Err(e) => Err(e),
+        })
+        .is_ok()
 }

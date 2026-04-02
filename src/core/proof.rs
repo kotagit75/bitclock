@@ -31,7 +31,6 @@ impl Proof {
             self.address.clone(),
             self.sign.clone(),
         )
-        .is_ok()
     }
 }
 impl Proof {
@@ -261,9 +260,7 @@ mod tests {
                 &proof_to_buf_for_sign(data, Vec::new(), sk, address.clone(), 0, 0),
                 address,
                 signature
-            )
-            .is_ok()
-                && proof.verify_sign()
+            ) && proof.verify_sign()
         );
     }
 }
