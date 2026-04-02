@@ -55,7 +55,7 @@ $ cargo build --release
 ### Simple Example
 - [Text-Proof](example/text-proof/README.md) - You can create simple proofs.
 
-### [see tutorial](docs/tutorial.md)
+### [Tutorial](docs/tutorial.md)
 ### Usage
 ```bash
 # run
