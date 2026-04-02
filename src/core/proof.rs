@@ -173,8 +173,12 @@ impl UnSignedProof {
         })
     }
 
-    pub fn create_signed_proof(&self, node_sk: SK, stamps: Vec<Stamp>) -> Result<Proof, ()> {
-        let Ok(sign) = create_sign_to_proof(
+    pub fn create_signed_proof(
+        &self,
+        node_sk: SK,
+        stamps: Vec<Stamp>,
+    ) -> Result<Proof, ErrorStack> {
+        create_sign_to_proof(
             node_sk,
             self.data.clone(),
             stamps.clone(),
@@ -182,13 +186,13 @@ impl UnSignedProof {
             self.address.clone(),
             self.difficulty,
             self.time,
-        ) else {
-            return Err(());
-        };
-        let mut new_proof = self.clone();
-        new_proof.stamps = stamps;
-        new_proof.sign = sign;
-        Ok(new_proof)
+        )
+        .map(|sign| {
+            let mut new_proof = self.clone();
+            new_proof.stamps = stamps;
+            new_proof.sign = sign;
+            new_proof
+        })
     }
 }
 
