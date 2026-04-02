@@ -102,10 +102,7 @@ impl State {
     fn stamp_pool_to_map(&self) -> HashMap<PK, Vec<Stamp>> {
         let mut stamp_map: HashMap<PK, Vec<Stamp>> = HashMap::new();
         for stamp in self.stamp_pool.clone() {
-            stamp_map
-                .entry(stamp.pk.clone())
-                .or_insert_with(Vec::new)
-                .push(stamp);
+            stamp_map.entry(stamp.pk.clone()).or_default().push(stamp);
         }
         stamp_map
     }
