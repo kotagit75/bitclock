@@ -14,9 +14,6 @@ pub async fn boot() -> Result<(State, (mpsc::Receiver<Event>, watch::Sender<Stat
         error!("Failed to load the private key");
         return Err(());
     };
-    let Ok(state) = State::new(key_pair) else {
-        error!("Failed to create state");
-        return Err(());
-    };
+    let state = State::new(key_pair);
     Ok((state.clone(), init_adapter(state)))
 }

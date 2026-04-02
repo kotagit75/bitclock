@@ -88,7 +88,7 @@ mod tests {
     where
         F: Fn(State) -> Event,
     {
-        let state = State::new(generate_pk_and_sk(512).unwrap()).unwrap();
+        let state = State::new(generate_pk_and_sk(512).unwrap());
         let (new_state, effects) = update(state.clone(), event(state.clone()), time);
         (state, new_state, effects)
     }

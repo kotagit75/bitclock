@@ -13,8 +13,8 @@ use crate::{
 };
 
 impl State {
-    pub fn new((address, node_sk): (Address, SK)) -> Result<Self, ()> {
-        Ok(State {
+    pub fn new((address, node_sk): (Address, SK)) -> Self {
+        State {
             proof_pool: ProofPool::default(),
             stamp_pool: Vec::new(),
             un_signed_proof_pool: Vec::new(),
@@ -22,7 +22,7 @@ impl State {
             node_sk,
             address,
             peers: vec![Client::new(MY_IP_ADDR.to_string())],
-        })
+        }
     }
     pub fn update_proof_pool(&self, pool: ProofPool) -> Self {
         State {
@@ -132,7 +132,7 @@ mod tests {
     #[test]
     fn test_add_peer() {
         let (address, node_sk) = generate_pk_and_sk(512).unwrap();
-        let state = State::new((address.clone(), node_sk.clone())).unwrap();
+        let state = State::new((address.clone(), node_sk.clone()));
         let ip_addr = "ip_addr".to_string();
         let new_state = state.add_peer(ip_addr.clone());
         assert!(new_state.peers.contains(&Client::new(ip_addr)));
@@ -147,7 +147,7 @@ mod tests {
             "content".to_string(),
         )
         .unwrap();
-        let state = State::new((address.clone(), node_sk.clone())).unwrap();
+        let state = State::new((address.clone(), node_sk.clone()));
         let un_signed_proof = UnSignedProof::new(data, node_sk, address.clone(), 0, 0);
         let new_state = state.add_to_un_signed_proof_pool(un_signed_proof.clone());
         assert_eq!(new_state.un_signed_proof_pool.clone().len(), 1);
