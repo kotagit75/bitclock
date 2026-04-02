@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use openssl::error::ErrorStack;
 
 use crate::{
@@ -5,6 +7,16 @@ use crate::{
     model::{address::Address, data::Data, signature::Signature},
     util::key::SK,
 };
+
+impl Display for Data {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} {} {}",
+            self.recipient.der, self.issuer.der, self.content
+        )
+    }
+}
 
 impl Data {
     #[allow(dead_code)]
@@ -20,13 +32,6 @@ impl Data {
             content,
             sign,
         })
-    }
-
-    pub fn to_string(&self) -> String {
-        format!(
-            "{} {} {}",
-            self.recipient.der, self.issuer.der, self.content
-        )
     }
 
     pub fn to_buf_for_sign(&self) -> Vec<u8> {
