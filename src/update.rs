@@ -142,7 +142,7 @@ mod tests {
         );
         assert_eq!(new_state.stamp_pool.len(), 1);
         assert_eq!(
-            new_state.stamp_pool.get(0).unwrap().clone(),
+            new_state.stamp_pool.first().unwrap().clone(),
             create_stamp(state)
         );
         assert_eq!(effects.len(), 0);
