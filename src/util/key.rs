@@ -44,7 +44,7 @@ impl SK {
 
 pub fn generate_pk_and_sk(bits: u32) -> Result<(PK, SK), ErrorStack> {
     Rsa::generate(bits)
-        .and_then(|rsa| PKey::from_rsa(rsa))
+        .and_then(PKey::from_rsa)
         .map(SK::new)
         .and_then(|sk| sk.clone().to_pk().map(|pk| (pk, sk)))
 }
