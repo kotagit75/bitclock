@@ -38,7 +38,7 @@ impl ProofPool {
         self.sort_pool()
             .iter()
             .filter_map(|proof| proof.find_stamp_has_address(address.clone()))
-            .last()
+            .next_back()
     }
     pub fn get_lastest_count_of_address(&self, address: Address) -> u32 {
         if let Some(lastest_stamp) = self.get_lastest_stamp_of_address(address) {
