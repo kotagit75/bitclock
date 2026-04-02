@@ -1,5 +1,6 @@
 use openssl::error::ErrorStack;
 use sha2::Digest;
+use vdf::InvalidIterations;
 
 use crate::{
     core::signature::{sign, verify},
@@ -118,8 +119,8 @@ pub fn calc_solution(
     pk: &PK,
     nonce: u32,
     id: usize,
-) -> Result<Vec<u8>, ()> {
-    solve(stamp_to_buf_for_vdf(address, count, pk, nonce, id).as_slice()).or(Err(()))
+) -> Result<Vec<u8>, InvalidIterations> {
+    solve(stamp_to_buf_for_vdf(address, count, pk, nonce, id).as_slice())
 }
 
 pub fn verify_solution_stamp(stamp: Stamp) -> bool {
