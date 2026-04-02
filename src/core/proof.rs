@@ -14,7 +14,7 @@ use crate::util::key::{PK, SK, generate_pk_and_sk};
 pub const PROOF_KEY_BITS: u32 = 512;
 
 impl Proof {
-    pub fn to_buf_for_sign(&self) -> Result<Vec<u8>, ()> {
+    pub fn to_buf_for_sign(&self) -> Vec<u8> {
         proof_to_buf_for_sign(
             self.data.clone(),
             self.stamps.clone(),
@@ -26,9 +26,12 @@ impl Proof {
     }
 
     pub fn verify_sign(&self) -> bool {
-        self.to_buf_for_sign()
-            .map(|buf| verify(&buf, self.address.clone(), self.sign.clone()))
-            .is_ok()
+        verify(
+            &self.to_buf_for_sign(),
+            self.address.clone(),
+            self.sign.clone(),
+        )
+        .is_ok()
     }
 }
 impl Proof {
@@ -51,34 +54,26 @@ fn proof_to_buf_for_sign(
     address: Address,
     difficulty: usize,
     time: i64,
-) -> Result<Vec<u8>, ()> {
-    let data_buf = data.to_string().as_bytes().to_vec();
-    let stamp_buf = {
-        let stamp_bufs: Vec<Vec<u8>> = stamps
-            .iter()
-            .map(|stamp| stamp.to_buf_for_sign())
-            .filter_map(Result::ok)
-            .collect();
-        stamp_bufs
-    }
-    .concat();
-    let Ok(sk_buf) = sk.key().private_key_to_der() else {
-        return Err(());
-    };
-    let Ok(address_buf) = address.key().public_key_to_der() else {
-        return Err(());
-    };
-    let difficulty_buf = difficulty.to_be_bytes();
-    let time_buf = time.to_be_bytes();
-    Ok([
-        data_buf,
-        stamp_buf,
-        sk_buf,
-        address_buf,
-        difficulty_buf.to_vec(),
-        time_buf.to_vec(),
-    ]
-    .concat())
+) -> Vec<u8> {
+    return format!(
+        "{:?} {:?} {:?} {:?} {:?} {:?}",
+        data.to_string(),
+        {
+            let stamp_bufs: Vec<Vec<u8>> = stamps
+                .iter()
+                .map(|stamp| stamp.to_buf_for_sign())
+                .filter_map(Result::ok)
+                .collect();
+            stamp_bufs
+        }
+        .concat(),
+        sk.der,
+        address.der,
+        difficulty,
+        time
+    )
+    .as_bytes()
+    .to_vec();
 }
 pub fn create_sign_to_proof(
     node_sk: SK,
@@ -89,9 +84,10 @@ pub fn create_sign_to_proof(
     difficulty: usize,
     time: i64,
 ) -> Result<Signature, ()> {
-    match proof_to_buf_for_sign(data, stamps, sk, address, difficulty, time)
-        .and_then(|buf| sign(&buf, node_sk))
-    {
+    match sign(
+        &proof_to_buf_for_sign(data, stamps, sk, address, difficulty, time),
+        node_sk,
+    ) {
         Ok(sign) => Ok(sign),
         Err(_) => Err(()),
     }
@@ -230,7 +226,7 @@ mod tests {
         };
         assert_eq!(
             sign(
-                &proof_to_buf_for_sign(data, Vec::new(), sk, address, 0, 0).unwrap(),
+                &proof_to_buf_for_sign(data, Vec::new(), sk, address, 0, 0),
                 node_sk
             )
             .unwrap(),
@@ -265,7 +261,7 @@ mod tests {
         };
         assert!(
             verify(
-                &proof_to_buf_for_sign(data, Vec::new(), sk, address.clone(), 0, 0).unwrap(),
+                &proof_to_buf_for_sign(data, Vec::new(), sk, address.clone(), 0, 0),
                 address,
                 signature
             )
