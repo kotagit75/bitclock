@@ -14,9 +14,6 @@ BitClock is a distributed timestamp system without requiring consensus. Each nod
 > [!NOTE]
 > BitClock is currently in active development. The API and features may change without notice.
 
-> [!IMPORTANT]
-> BitClock is in the process of migrating from TypeScript to Rust. Development using Rust is underway in this repository.[Proof of Concept Using TypeScript](https://github.com/kotagit75/bitclock-PoC)
-
 ## :sparkles: Features
 - 🔒 **Instant finality** - A proof is finalized once it is validated by the network and cannot be reversed.
 - 🏎️ **No consensus required**　- Timestamps can be issued without consensus.
