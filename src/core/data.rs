@@ -13,11 +13,8 @@ impl Data {
         recipient: Address,
         issuer: Address,
         content: String,
-    ) -> Result<Self, ()> {
-        let Ok(sign) = create_sign_to_data(node_sk, &recipient, &issuer, content.clone()) else {
-            return Err(());
-        };
-        Ok(Self {
+    ) -> Result<Self, ErrorStack> {
+        create_sign_to_data(node_sk, &recipient, &issuer, content.clone()).map(|sign| Self {
             recipient,
             issuer,
             content,
