@@ -158,15 +158,19 @@ impl UnSignedProof {
         address: Address,
         time: i64,
         proof_pool: &ProofPool,
-    ) -> Result<(Self, PK), ()> {
-        let Ok((pk, sk)) = generate_pk_and_sk(PROOF_KEY_BITS) else {
-            return Err(());
-        };
-        let difficulty = proof_pool.calc_difficulty(time);
-        Ok((
-            UnSignedProof::new(data, sk, address.clone(), difficulty, time),
-            pk,
-        ))
+    ) -> Result<(Self, PK), ErrorStack> {
+        generate_pk_and_sk(PROOF_KEY_BITS).map(|(pk, sk)| {
+            (
+                UnSignedProof::new(
+                    data,
+                    sk,
+                    address.clone(),
+                    proof_pool.calc_difficulty(time),
+                    time,
+                ),
+                pk,
+            )
+        })
     }
 
     pub fn create_signed_proof(&self, node_sk: SK, stamps: Vec<Stamp>) -> Result<Proof, ()> {
