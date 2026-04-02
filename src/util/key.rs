@@ -42,16 +42,9 @@ impl SK {
     }
 }
 
-pub fn generate_pk_and_sk(bits: u32) -> Result<(PK, SK), ()> {
-    let Ok(rsa) = Rsa::generate(bits) else {
-        return Err(());
-    };
-    let Ok(key) = PKey::from_rsa(rsa) else {
-        return Err(());
-    };
-    let sk = SK::new(key);
-    let Ok(pk) = sk.to_pk() else {
-        return Err(());
-    };
-    Ok((pk, sk))
+pub fn generate_pk_and_sk(bits: u32) -> Result<(PK, SK), ErrorStack> {
+    Rsa::generate(bits)
+        .and_then(|rsa| PKey::from_rsa(rsa))
+        .map(|key| SK::new(key))
+        .and_then(|sk| sk.clone().to_pk().map(|pk| (pk, sk)))
 }
