@@ -21,7 +21,7 @@ pub fn sign(data: &[u8], sk: SK) -> Result<Signature, ErrorStack> {
 pub fn verify(data: &[u8], pk: PK, signature: Signature) -> bool {
     Verifier::new(MessageDigest::sha256(), &pk.key())
         .and_then(|mut verifyer| match verifyer.update(data) {
-            Ok(_) => verifyer.verify(&signature).or_else(|e| Err(e)),
+            Ok(_) => verifyer.verify(&signature),
             Err(e) => Err(e),
         })
         .is_ok()
