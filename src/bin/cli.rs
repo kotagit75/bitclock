@@ -183,7 +183,7 @@ async fn main() {
                     .proof_pool
                     .sort_pool()
                     .iter()
-                    .map(|proof| {
+                    .filter_map(|proof| {
                         let pk1 = PK { der: der1.clone() };
                         let pk2 = PK { der: der2.clone() };
                         if proof.data.recipient != pk1 && proof.data.issuer != pk1 {
@@ -197,7 +197,6 @@ async fn main() {
                             content: proof.data.content.clone(),
                         })
                     })
-                    .flatten()
                     .collect::<Vec<FindByPairResult>>(),
             ) else {
                 return;
