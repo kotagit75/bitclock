@@ -40,7 +40,7 @@ Instead, each node maintains a counter that serves as its local time, and the ti
 - About the algorithm - [algorithm](docs/algorithm.md)
 - Tutorial - [Tutorial](docs/tutorial.md)
 
-## :rocket: Getting Started([see tutorial](docs/tutorial.md))
+## :rocket: Getting Started
 ### Installation
 ```bash
 # Clone the repository (or Download ZIP)
@@ -52,7 +52,10 @@ $ cd bitclock
 # build
 $ cargo build --release
 ```
+### Simple Example
+- [Text-Proof](example/text-proof/README.md) - You can create simple proofs.
 
+### [see tutorial](docs/tutorial.md)
 ### Usage
 ```bash
 # run
