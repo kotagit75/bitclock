@@ -23,7 +23,7 @@ BitClock is a distributed timestamp system without requiring consensus. Each nod
 - 🕰️ **Distributed timestamp without ledger** - We can verify timestamp without global ledgers or blockchains.
 - ⚡ **Fast timestamp creation** - Once you've collected a certain number of stamps, you can create a proof right away.
 
-## Attack Resistance
+## :shield: Attack Resistance
 BitClock requires a certain amount of computational work via Proof of Work to generate timestamps and uses a Verifiable Delay Function (VDF) to ensure a fixed delay. This makes the system resistant to Sybil attacks.
 
 ## :dart: Use case
