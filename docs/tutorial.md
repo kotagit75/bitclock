@@ -38,13 +38,13 @@ Initially, ProofPool will show that there is nothing there.
 ```
 
 ## 4. Create Proof
-Let's create a proof. You can register any recipient and content in a proof. For example, let’s create a proof with your own address as the recipient and “Hello world!” as the content. You can retrieve your own address using the `./target/release/cli address` command.
+Let's create a proof. You can register any recipient and content in a proof. For example, let’s create a proof with your own address as the recipient and “Hello world” as the content. You can retrieve your own address using the `./target/release/cli address` command.
 ```bash
 ./target/release/cli address
 # [display your own address]
 ```
 ```bash
-./target/release/cli proof '[your_own_address]' 'Hello world!'
+./target/release/cli proof '[your_own_address]' 'Hello world'
 ```
 If the proof is created successfully, a message will appear.
 ```
@@ -59,7 +59,7 @@ Let’s take a look at the proof we created in the previous chapter. If you run 
 ```
 If the following JSON data is output, the search was successful. The output JSON contains data regarding the proof that was created.
 ```json
-{"data":{..., "content": "Hello world!"},"stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":...,"time":1774513428556,"sign":[...]}
+{"data":{..., "content": "Hello world"},"stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":...,"time":1774513428556,"sign":[...]}
 ```
 
 ## 5. Verify Proof
@@ -69,7 +69,7 @@ If a friend gives you a proof, how can you verify that it is correct? If that pr
 ```
 For example, let’s verify the proof we just created.
 ```bash
-./target/release/cli verify '{"data":"Hello world!","stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":3,"time":1774513428556,"sign":[...]}'
+./target/release/cli verify '{"data":"Hello world","stamps":[...],"sk":{"der":"..."},"address":{"der":"..."},"difficulty":3,"time":1774513428556,"sign":[...]}'
 ```
 If the proof is correct, `true` will be displayed; if it is incorrect, `false` will be displayed.
 
