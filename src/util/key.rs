@@ -37,14 +37,14 @@ impl SK {
         self.key()
             .public_key_to_pem()
             .and_then(|pem| Rsa::public_key_from_pem(pem.as_slice()))
-            .and_then(|rsa| PKey::from_rsa(rsa))
-            .map(|key| PK::new(key))
+            .and_then(PKey::from_rsa)
+            .map(PK::new)
     }
 }
 
 pub fn generate_pk_and_sk(bits: u32) -> Result<(PK, SK), ErrorStack> {
     Rsa::generate(bits)
         .and_then(|rsa| PKey::from_rsa(rsa))
-        .map(|key| SK::new(key))
+        .map(SK::new)
         .and_then(|sk| sk.clone().to_pk().map(|pk| (pk, sk)))
 }
