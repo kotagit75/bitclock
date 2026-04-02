@@ -1,4 +1,5 @@
 use openssl::{
+    error::ErrorStack,
     pkey::{PKey, Private, Public},
     rsa::Rsa,
 };
@@ -32,17 +33,12 @@ impl SK {
     pub fn key(&self) -> PKey<Private> {
         PKey::private_key_from_der(&hex::decode(self.der.clone()).unwrap()).unwrap()
     }
-    pub fn to_pk(&self) -> Result<PK, ()> {
-        let Ok(pem) = self.key().public_key_to_pem() else {
-            return Err(());
-        };
-        let Ok(rsa) = Rsa::public_key_from_pem(pem.as_slice()) else {
-            return Err(());
-        };
-        let Ok(key) = PKey::from_rsa(rsa) else {
-            return Err(());
-        };
-        Ok(PK::new(key))
+    pub fn to_pk(&self) -> Result<PK, ErrorStack> {
+        self.key()
+            .public_key_to_pem()
+            .and_then(|pem| Rsa::public_key_from_pem(pem.as_slice()))
+            .and_then(|rsa| PKey::from_rsa(rsa))
+            .map(|key| PK::new(key))
     }
 }
 
